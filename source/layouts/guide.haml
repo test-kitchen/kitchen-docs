@@ -37,6 +37,12 @@
           - if current_resource.data.alert
             %div.alert.alert-info= current_resource.data.alert
 
+          - if current_resource.data.prev
+            %div.callout
+              %p
+                %strong= "Previously: "
+                %a{ href: current_page.data.prev.url }= current_page.data.prev.text 
+
           %span#githubs
             %h2= current_page.data.title
             %a{ href: @forkthedocs }

@@ -56,3 +56,16 @@ table {
 .table > tbody > tr > td {
   border-top: 0px;
 };
+
+.callout {
+  @extend .alert;
+  color: #468847;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  border-radius: 0px;
+  border-left: 5px solid #468847;
+}
+
+.callout a {
+  color: inherit;
+}
