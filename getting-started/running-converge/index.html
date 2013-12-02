@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 26.31578947368421%;'>
+          <span class='sr-only' id='26.31578947368421% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Running Kitchen Converge</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/running-converge.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>Now that we have some code, let's let Test Kitchen run it for us on our Ubuntu 12.04 instance:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen converge default-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Converging &lt;default-ubuntu-1204&gt;...&#x000A;       Preparing files for transfer&#x000A;       Preparing current project directory as a cookbook&#x000A;       Removing non-cookbook files before transfer&#x000A;-----&gt; Installing Chef Omnibus (true)&#x000A;       downloading https://www.opscode.com/chef/install.sh&#x000A;         to file /tmp/install.sh&#x000A;       trying wget...&#x000A;Downloading Chef  for ubuntu...&#x000A;Installing Chef&#x000A;Selecting previously unselected package chef.&#x000A;(Reading database ... 53291 files and directories currently installed.)&#x000A;Unpacking chef (from .../tmp.GUasmrcD/chef__amd64.deb) ...&#x000A;Setting up chef (11.8.0-1.ubuntu.12.04) ...&#x000A;Thank you for installing Chef!&#x000A;       Transfering files to &lt;default-ubuntu-1204&gt;&#x000A;[2013-11-30T21:55:45+00:00] INFO: Forking chef instance to converge...&#x000A;Starting Chef Client, version 11.8.0&#x000A;[2013-11-30T21:55:45+00:00] INFO: *** Chef 11.8.0 ***&#x000A;[2013-11-30T21:55:45+00:00] INFO: Chef-client pid: 1162&#x000A;[2013-11-30T21:55:46+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON&#x000A;[2013-11-30T21:55:46+00:00] INFO: Run List is [recipe[git::default]]&#x000A;[2013-11-30T21:55:46+00:00] INFO: Run List expands to [git::default]&#x000A;[2013-11-30T21:55:46+00:00] INFO: Starting Chef Run for default-ubuntu-1204&#x000A;[2013-11-30T21:55:46+00:00] INFO: Running start handlers&#x000A;[2013-11-30T21:55:46+00:00] INFO: Start handlers complete.&#x000A;Compiling Cookbooks...&#x000A;Converging 2 resources&#x000A;Recipe: git::default&#x000A;  * package[git] action install[2013-11-30T21:55:46+00:00] INFO: Processing package[git] action install (git::default line 1)&#x000A;&#x000A;    - install version 1:1.7.9.5-1 of package git&#x000A;&#x000A;  * log[Well, that was too easy] action write[2013-11-30T21:56:14+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)&#x000A;[2013-11-30T21:56:14+00:00] INFO: Well, that was too easy&#x000A;&#x000A;&#x000A;[2013-11-30T21:56:14+00:00] INFO: Chef Run complete in 28.139177847 seconds&#x000A;[2013-11-30T21:56:14+00:00] INFO: Running report handlers&#x000A;[2013-11-30T21:56:14+00:00] INFO: Report handlers complete&#x000A;Chef Client finished, 2 resources updated&#x000A;       Finished converging &lt;default-ubuntu-1204&gt; (1m3.91s).&#x000A;-----&gt; Kitchen is finished. (1m4.22s)&#x000A;</pre>&#x000A;<p>To quote our Chef run, that <strong>was</strong> too easy. If you are a Chef user then part of the output above should look familiar to you. Here's what happened at a high level:</p>&#x000A;&#x000A;<ul>&#x000A;  <li>Chef was installed on the instance by performing an <a href="http://www.opscode.com/chef/install/">Omnibus pacakge installation</a></li>&#x000A;  <li>Your Git cookbook files and a minimal Chef Solo configuration were built and uploaded to the instance</li>&#x000A;  <li>A Chef run was initiated using the run-list and node attributes specified in the <code>.kitchen.yml</code> file</li>&#x000A;</ul>&#x000A;&#x000A;<p>There's nothing to stop you from running this command again (or over-and-over for that matter) so, let's see what happens:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen converge default-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Converging &lt;default-ubuntu-1204&gt;...&#x000A;       Preparing files for transfer&#x000A;       Preparing current project directory as a cookbook&#x000A;       Removing non-cookbook files before transfer&#x000A;       Transfering files to &lt;default-ubuntu-1204&gt;&#x000A;[2013-11-30T21:57:00+00:00] INFO: Forking chef instance to converge...&#x000A;Starting Chef Client, version 11.8.0&#x000A;[2013-11-30T21:57:00+00:00] INFO: *** Chef 11.8.0 ***&#x000A;[2013-11-30T21:57:00+00:00] INFO: Chef-client pid: 4142&#x000A;[2013-11-30T21:57:01+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON&#x000A;[2013-11-30T21:57:01+00:00] INFO: Run List is [recipe[git::default]]&#x000A;[2013-11-30T21:57:01+00:00] INFO: Run List expands to [git::default]&#x000A;[2013-11-30T21:57:01+00:00] INFO: Starting Chef Run for default-ubuntu-1204&#x000A;[2013-11-30T21:57:01+00:00] INFO: Running start handlers&#x000A;[2013-11-30T21:57:01+00:00] INFO: Start handlers complete.&#x000A;Compiling Cookbooks...&#x000A;Converging 2 resources&#x000A;Recipe: git::default&#x000A;  * package[git] action install[2013-11-30T21:57:01+00:00] INFO: Processing package[git] action install (git::default line 1)&#x000A; (up to date)&#x000A;  * log[Well, that was too easy] action write[2013-11-30T21:57:01+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)&#x000A;[2013-11-30T21:57:01+00:00] INFO: Well, that was too easy&#x000A;&#x000A;&#x000A;[2013-11-30T21:57:01+00:00] INFO: Chef Run complete in 0.069998015 seconds&#x000A;[2013-11-30T21:57:01+00:00] INFO: Running report handlers&#x000A;[2013-11-30T21:57:01+00:00] INFO: Report handlers complete&#x000A;Chef Client finished, 1 resources updated&#x000A;       Finished converging &lt;default-ubuntu-1204&gt; (0m1.67s).&#x000A;-----&gt; Kitchen is finished. (0m1.99s)&#x000A;</pre>&#x000A;<p>That ran a <strong>lot</strong> faster didn't it? Here's what happened this time:</p>&#x000A;&#x000A;<ul>&#x000A;  <li>Test Kitchen found that Chef was present and installed so skipped a re-installation.</li>&#x000A;  <li>The same Chef cookbook files and Chef Solo configuration was uploaded to the instance. Test Kitchen is optimizing for <strong>freshness of code and configuration over speed</strong>. Although we all like speed wherever possible.</li>&#x000A;  <li>A Chef run is initiated and runs very quickly as we are in the desired state.</li>&#x000A;</ul>&#x000A;&#x000A;<table>&#x000A;  <tbody>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>Pro-Tip</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>A lot of time and effort has gone into ensuring that the exit code of Test Kitchen is always appropriate. Here is the Kitchen Command Guarentee:</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>1. I will always exit with code <strong>0</strong> if my operation was successful.</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>2. I will always exit with a non-zero code if <strong>any</strong> part of my operation was not successful.</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>3. Any behavior to the contrary <strong>is a bug</strong>.</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>This exit code behavior is a funamental prerequisite for any tool working in a Continuous Integration (CI) environment.</td>&#x000A;    </tr>&#x000A;  </tbody>&#x000A;</table>&#x000A;&#x000A;<p>Let's check the status of our instance:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     Converged&#x000A;</pre>&#x000A;<p>A clean converge run, success! Let's commit our production code and move on:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git add recipes/default.rb&#x000A;$ git commit -m "Implemented the default recipe, woot woot."&#x000A;[master 4d54a16] Implemented the default recipe, woot woot.&#x000A; 1 file changed, 3 insertions(+)&#x000A;</pre>&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='manually-verifying'>
+                  Manually verifying
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 73.68421052631578%;'>
+          <span class='sr-only' id='73.68421052631578% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Writing a Server Test</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/writing-server-test.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>Now to write a test or two. Previously we've seen the bats testing framework in action but this isn't always a viable option. For example if you needed to verify that a package was installed and you needed to test that on Ubuntu and CentOS platforms, then what would you do? You need to bust out some platform detection in order to run a Debian or RPM-based command. Feels like Chef would help us here since it's good at that sort of thing. On the other hand there are advantages to treating our Chef run as a black box, an configuration-management implementation detail, if you will. So what to do?</p>&#x000A;&#x000A;<p>A nice solution to the platform-agnostic test issue exists called <a href="http://serverspec.org/">Serverspec</a>. It is a set of RSpec matchers that can assert things about servers like packages installed, services enabled, ports listening, etc. Let's see what this looks like for our Git Daemon tests.</p>&#x000A;&#x000A;<p>First we're going to create a directory for our test file:</p>&#x000A;&#x000A;<pre class="highlight plaintext">mkdir -p test/integration/server/serverspec&#x000A;</pre>&#x000A;<p>Next, create a file called <code>test/integration/server/serverspec/git_daemon_spec.rb</code> with the following:</p>&#x000A;&#x000A;<pre class="highlight ruby"><span class="nb">require</span> <span class="s1">'serverspec'</span>&#x000A;<span class="nb">require</span> <span class="s1">'pathname'</span>&#x000A;&#x000A;<span class="kp">include</span> <span class="no">Serverspec</span><span class="o">::</span><span class="no">Helper</span><span class="o">::</span><span class="no">Exec</span>&#x000A;<span class="kp">include</span> <span class="no">Serverspec</span><span class="o">::</span><span class="no">Helper</span><span class="o">::</span><span class="no">DetectOS</span>&#x000A;&#x000A;<span class="no">RSpec</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>&#x000A;  <span class="n">c</span><span class="p">.</span><span class="nf">before</span> <span class="ss">:all</span> <span class="k">do</span>&#x000A;    <span class="n">c</span><span class="p">.</span><span class="nf">os</span> <span class="o">=</span> <span class="n">backend</span><span class="p">(</span><span class="no">Serverspec</span><span class="o">::</span><span class="no">Commands</span><span class="o">::</span><span class="no">Base</span><span class="p">).</span><span class="nf">check_os</span>&#x000A;    <span class="n">c</span><span class="p">.</span><span class="nf">path</span> <span class="o">=</span> <span class="s1">'/sbin:/usr/sbin'</span>&#x000A;  <span class="k">end</span>&#x000A;<span class="k">end</span>&#x000A;&#x000A;<span class="n">describe</span> <span class="s2">"Git Daemon"</span> <span class="k">do</span>&#x000A;&#x000A;  <span class="n">it</span> <span class="s2">"is listening on port 9418"</span> <span class="k">do</span>&#x000A;    <span class="n">expect</span><span class="p">(</span><span class="n">port</span><span class="p">(</span><span class="mi">9418</span><span class="p">)).</span><span class="nf">to</span> <span class="n">be_listening</span>&#x000A;  <span class="k">end</span>&#x000A;&#x000A;  <span class="n">it</span> <span class="s2">"has a running service of git-daemon"</span> <span class="k">do</span>&#x000A;    <span class="n">expect</span><span class="p">(</span><span class="n">service</span><span class="p">(</span><span class="s2">"git-daemon"</span><span class="p">)).</span><span class="nf">to</span> <span class="n">be_running</span>&#x000A;  <span class="k">end</span>&#x000A;&#x000A;<span class="k">end</span>&#x000A;</pre>&#x000A;<p>The beginning stanzas are RSpec and Serverspec setup and the meat of our testing is in the <code>describe "Git Daemon"</code> Ruby block. In short, it's asserting that we will have a server listening on port 9418 and a running service called "git-daemon".</p>&#x000A;&#x000A;<p>As our primary target platform was Ubuntu 12.04, we'll target this one first for development. Now, in Test-Driven style we'll run <code>kitchen verify</code> to watch our tests fail spectacularly:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify server-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Creating &lt;server-ubuntu-1204&gt;...&#x000A;       Bringing machine 'default' up with 'virtualbox' provider...&#x000A;       [default] Importing base box 'opscode-ubuntu-12.04'...&#x000A;       [default] Matching MAC address for NAT networking...&#x000A;       [default] Setting the name of the VM...&#x000A;       [default] Clearing any previously set forwarded ports...&#x000A;       [default] Creating shared folders metadata...&#x000A;       [default] Clearing any previously set network interfaces...&#x000A;       [default] Preparing network interfaces based on configuration...&#x000A;       [default] Forwarding ports...&#x000A;       [default] -- 22 =&gt; 2222 (adapter 1)&#x000A;       [default] Running 'pre-boot' VM customizations...&#x000A;       [default] Booting VM...&#x000A;       [default] Waiting for machine to boot. This may take a few minutes...&#x000A;       [default] Machine booted and ready!&#x000A;       [default] Setting hostname...&#x000A;       [default] Mounting shared folders...&#x000A;       Vagrant instance &lt;server-ubuntu-1204&gt; created.&#x000A;       Finished creating &lt;server-ubuntu-1204&gt; (0m35.69s).&#x000A;-----&gt; Converging &lt;server-ubuntu-1204&gt;...&#x000A;       Preparing files for transfer&#x000A;       Preparing current project directory as a cookbook&#x000A;       Removing non-cookbook files before transfer&#x000A;-----&gt; Installing Chef Omnibus (true)&#x000A;       downloading https://www.opscode.com/chef/install.sh&#x000A;         to file /tmp/install.sh&#x000A;       trying wget...&#x000A;&#x000A;Downloading Chef  for ubuntu...&#x000A;Installing Chef&#x000A;Selecting previously unselected package chef.&#x000A;(Reading database ... 53291 files and directories currently installed.)&#x000A;Unpacking chef (from .../tmp.H1RNfFn1/chef__amd64.deb) ...&#x000A;Setting up chef (11.8.0-1.ubuntu.12.04) ...&#x000A;Thank you for installing Chef!&#x000A;       Transfering files to &lt;server-ubuntu-1204&gt;&#x000A;[2013-12-01T18:32:58+00:00] INFO: Forking chef instance to converge...&#x000A;Starting Chef Client, version 11.8.0&#x000A;[2013-12-01T18:32:58+00:00] INFO: *** Chef 11.8.0 ***&#x000A;[2013-12-01T18:32:58+00:00] INFO: Chef-client pid: 1147&#x000A;[2013-12-01T18:32:58+00:00] INFO: Setting the run_list to ["recipe[git::server]"] from JSON&#x000A;[2013-12-01T18:32:58+00:00] INFO: Run List is [recipe[git::server]]&#x000A;[2013-12-01T18:32:58+00:00] INFO: Run List expands to [git::server]&#x000A;[2013-12-01T18:32:58+00:00] INFO: Starting Chef Run for server-ubuntu-1204&#x000A;[2013-12-01T18:32:58+00:00] INFO: Running start handlers&#x000A;[2013-12-01T18:32:58+00:00] INFO: Start handlers complete.&#x000A;Compiling Cookbooks...&#x000A;&#x000A;================================================================================&#x000A;Recipe Compile Error&#x000A;================================================================================&#x000A;&#x000A;&#x000A;Chef::Exceptions::RecipeNotFound&#x000A;--------------------------------&#x000A;could not find recipe server for cookbook git&#x000A;&#x000A;&#x000A;[2013-12-01T18:32:58+00:00] ERROR: Running exception handlers&#x000A;[2013-12-01T18:32:58+00:00] ERROR: Exception handlers complete&#x000A;[2013-12-01T18:32:58+00:00] FATAL: Stacktrace dumped to /tmp/kitchen/cache/chef-stacktrace.out&#x000A;Chef Client failed. 0 resources updated&#x000A;[2013-12-01T18:32:58+00:00] ERROR: could not find recipe server for cookbook git&#x000A;[2013-12-01T18:32:58+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Converge failed on instance &lt;server-ubuntu-1204&gt;.&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Please see .kitchen/logs/server-ubuntu-1204.log for more details&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; ------Exception-------&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Class: Kitchen::ActionFailed&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Message: SSH exited (1) for command: [sudo -E chef-solo --config /tmp/kitchen/solo.rb --json-attributes /tmp/kitchen/dna.json  --log_level info]&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; ----------------------&#x000A;</pre>&#x000A;<p>One quick check of <code>kitchen list</code> tells us that our instance was created by not successfully converged:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list server-ubuntu-1204&#x000A;Instance            Driver   Provisioner  Last Action&#x000A;server-ubuntu-1204  Vagrant  ChefSolo     Created&#x000A;</pre>&#x000A;<p>Yes, you can specify one or more instances with the same Ruby regular expression globbing as any other <code>kitchen</code> subcommands.</p>&#x000A;&#x000A;<p>Okay, no recipe called <code>server</code> in our Git cookbook. Let's go start one.</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='writing-failing-recipe'>
+                  Writing a Failing Recipe
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

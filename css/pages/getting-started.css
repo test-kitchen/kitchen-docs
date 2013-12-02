@@ -1,0 +1,52 @@
+/*
+    CSS modifications for the /getting-started page(s) 
+*/
+/* line 5, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+#githubs {
+  display: block; }
+  /* line 7, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+  #githubs h2 {
+    display: inline; }
+  /* line 10, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+  #githubs a {
+    display: inline;
+    /*float: right;*/
+    height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    transition: all .5s ease-in;
+    -o-transition: all .5s ease-in;
+    -moz-transition: all .5s ease-in;
+    -webkit-transition: all .5s ease-in; }
+  /* line 21, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+  #githubs a:hover {
+    text-decoration: none;
+    font-size: 150%;
+    color: #42484d;
+    transition: all .5s ease-in;
+    -o-transition: all .5s ease-in;
+    -moz-transition: all .5s ease-in;
+    -webkit-transition: all .5s ease-in; }
+
+/* line 32, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+#suggestions {
+  margin-bottom: 50px; }
+  /* line 34, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+  #suggestions .btn {
+    width: 100%; }
+
+/* line 39, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+.protip, table {
+  display: block; }
+
+/* line 47, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+table tr:nth-child(1) {
+  background-color: #e4e4e4; }
+  /* line 49, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+  table tr:nth-child(1) td:nth-child(1):after {
+    visibility: visible;
+    content: ">"; }
+
+/* line 56, /Users/fnichol/Projects/tk/kitchen-docs/source/css/pages/getting-started.css.scss */
+.table > tbody > tr > td, table > tbody > tr > td {
+  border-top: 0px; }

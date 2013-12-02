@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 42.10526315789473%;'>
+          <span class='sr-only' id='42.10526315789473% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Running Kitchen Verify</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/running-verify.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>Now to put our test to the test. For this we'll use the <strong>verify</strong> subcommand:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify default-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Setting up &lt;default-ubuntu-1204&gt;...&#x000A;Fetching: thor-0.18.1.gem (100%)&#x000A;Fetching: busser-0.6.0.gem (100%)&#x000A;Successfully installed thor-0.18.1&#x000A;Successfully installed busser-0.6.0&#x000A;2 gems installed&#x000A;-----&gt; Setting up Busser&#x000A;       Creating BUSSER_ROOT in /tmp/busser&#x000A;       Creating busser binstub&#x000A;       Plugin bats installed (version 0.1.0)&#x000A;-----&gt; Running postinstall for bats plugin&#x000A;      create  /tmp/bats20131130-4419-1fbu1/bats&#x000A;      create  /tmp/bats20131130-4419-1fbu1/bats.tar.gz&#x000A;Installed Bats to /tmp/busser/vendor/bats/bin/bats&#x000A;      remove  /tmp/bats20131130-4419-1fbu1&#x000A;       Finished setting up &lt;default-ubuntu-1204&gt; (0m4.25s).&#x000A;-----&gt; Verifying &lt;default-ubuntu-1204&gt;...&#x000A;       Suite path directory /tmp/busser/suites does not exist, skipping.&#x000A;Uploading /tmp/busser/suites/bats/git_installed.bats (mode=0644)&#x000A;-----&gt; Running bats test suite&#x000A; ✓ git binary is found in PATH&#x000A;&#x000A;1 test, 0 failures&#x000A;       Finished verifying &lt;default-ubuntu-1204&gt; (0m0.87s).&#x000A;-----&gt; Kitchen is finished. (0m5.45s)&#x000A;$ echo $?&#x000A;0&#x000A;</pre>&#x000A;<blockquote>&#x000A;  <p><strong>All right!</strong></p>&#x000A;</blockquote>&#x000A;&#x000A;<p>A few things of note from the output above:</p>&#x000A;&#x000A;<ul>&#x000A;  <li>Notice the <code>Setting up &lt;default-ubuntu-1204&gt;</code> line? That's another action called the <strong>Setup Action</strong>. Usually not a big for most users but this action is responsible for installing the Busser RubyGem and any test runner plugins required. In our case the <code>busser-bats</code> RubyGem was installed which helped to install the bats testing framework.</li>&#x000A;  <li>The <code>Verifying &lt;default-ubuntu-1204&gt;</code> line corresponds to the start of the <strong>Verify Action</strong> and the <code>✓ git binary is found in PATH</code> line is output from a bats test run.</li>&#x000A;  <li>The last command (<code>echo $?</code>) is a way to print the exit code of the last run shell command. This shows that the <strong>kitchen</strong> command exited cleanly.</li>&#x000A;</ul>&#x000A;&#x000A;<p>Let's check the status of our instance again:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     Verified&#x000A;</pre>&#x000A;<p>Quick, commit!</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git add test/integration/default/bats/git_installed.bats&#x000A;$ git commit -m "Add bats test for default suite."&#x000A;[master 69586ef] Add bats test for default suite.&#x000A; 1 file changed, 6 insertions(+)&#x000A; create mode 100644 test/integration/default/bats/git_installed.bats&#x000A;</pre>&#x000A;<p>So what would a failing test look like? Let's see. Open <code>test/integration/default/bats/git_installed.bats</code> in your editor of choice and edit the test so that we're looking for the <code>gittt</code> command:</p>&#x000A;&#x000A;<pre class="highlight shell"><span class="c">#!/usr/bin/env bats</span>&#x000A;&#x000A;@test <span class="s2">"gittt binary is found in PATH"</span> <span class="o">{</span>&#x000A;  run which gittt&#x000A;  <span class="o">[</span> <span class="s2">"</span><span class="nv">$status</span><span class="s2">"</span> -eq 0 <span class="o">]</span>&#x000A;<span class="o">}</span>&#x000A;</pre>&#x000A;<p>And re-run the <strong>verify</strong> subcommand:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify default-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Verifying &lt;default-ubuntu-1204&gt;...&#x000A;       Removing /tmp/busser/suites/bats&#x000A;Uploading /tmp/busser/suites/bats/git_installed.bats (mode=0644)&#x000A;-----&gt; Running bats test suite&#x000A; ✗ gittt binary is found in PATH&#x000A;   (in test file /tmp/busser/suites/bats/git_installed.bats, line 5)&#x000A;&#x000A;1 test, 1 failure&#x000A;Command [/tmp/busser/vendor/bats/bin/bats /tmp/busser/suites/bats] exit code was 1&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Verify failed on instance &lt;default-ubuntu-1204&gt;.&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Please see .kitchen/logs/default-ubuntu-1204.log for more details&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; ------Exception-------&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Class: Kitchen::ActionFailed&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Message: SSH exited (1) for command: [sh -c 'BUSSER_ROOT="/tmp/busser" GEM_HOME="/tmp/busser/gems" GEM_PATH="/tmp/busser/gems" GEM_CACHE="/tmp/busser/gems/cache" ; export BUSSER_ROOT GEM_HOME GEM_PATH GEM_CACHE; /tmp/busser/bin/busser test']&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; ----------------------&#x000A;$ echo $?&#x000A;10&#x000A;</pre>&#x000A;<p>Not quite as pretty and happy looking. Thanks to our well-crafted test case name our bats test is telling us what is up: <code>✗ gittt binary is found in PATH</code>. Yep, not a surprise. Also note that the exit code is no longer <strong>0</strong> but is <strong>10</strong>.</p>&#x000A;&#x000A;<p>A quick revert back to our clean code gets us back to green:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git checkout test/integration/default/bats/git_installed.bats&#x000A;$ kitchen verify default-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Verifying &lt;default-ubuntu-1204&gt;...&#x000A;       Removing /tmp/busser/suites/bats&#x000A;Uploading /tmp/busser/suites/bats/git_installed.bats (mode=0644)&#x000A;-----&gt; Running bats test suite&#x000A; ✓ git binary is found in PATH&#x000A;&#x000A;1 test, 0 failures&#x000A;       Finished verifying &lt;default-ubuntu-1204&gt; (0m0.89s).&#x000A;-----&gt; Kitchen is finished. (0m1.19s)&#x000A;</pre>&#x000A;<p>It's worth pointing out that Test Kitchen is freshly uploading all your tests files for <strong>every</strong> invocation of the <strong>Verify Action</strong>. Another example of Test Kitchen optimizing for <strong>freshness of code and configuration over speed</strong>.</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='running-test'>
+                  Running Kitchen Test
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

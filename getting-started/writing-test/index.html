@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 36.84210526315789%;'>
+          <span class='sr-only' id='36.84210526315789% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Writing a Test</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/writing-test.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>Being able to manually verify the Chef run is great but it would be even better if we had an executable test that would fail if our assumptions were ever proven to be false. Remember how we manually verified that Git was installed in the previous section? Seems like a pretty decent first test to me!</p>&#x000A;&#x000A;<p>Perhaps Ironically Test Kitchen isn't very choosy when it comes to tests. If you don't have any that's cool; a successful Chef run already gives you a ton of useful information.</p>&#x000A;&#x000A;<p>Now if you <strong>are</strong> interested in writing some tests, Test Kitchen has several options available to you. The component that helps facilitate testing on your instances is called <strong>Busser</strong>. Just like Test Kitchen it is a RubyGem library and it provides a plugin system so that you can wire in whatever testing framework your heart desires. A quick <a href="https://rubygems.org/search?utf8=%E2%9C%93&amp;query=busser-">search</a> on the RubyGems website returns several testing frameworks currently available to you.</p>&#x000A;&#x000A;<p>To keep things simple we're going to use the <code>busser-bats</code> runner plugin which uses the <a href="https://github.com/sstephenson/bats">Bash Automated Testing System</a> also known as <strong>bats</strong>.</p>&#x000A;&#x000A;<table>&#x000A;  <tbody>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>Pro-Tip</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>Testing using shell scripts is a great first start, but once you get to testing multiple platforms, you soon find that you're needing to invest some time in handling the differences between distributions and behaviours.  That might indicate to you that you should consider a testing tool that handles that hard work for you.  We'll see more about this shortly.</td>&#x000A;    </tr>&#x000A;  </tbody>&#x000A;</table>&#x000A;&#x000A;<p>We need to put our test files in a specifc location, so let's create the directory:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ mkdir -p test/integration/default/bats&#x000A;</pre>&#x000A;<p>It looks long and dense, but each directory has some meaning to Test Kitchen and the Busser helper:</p>&#x000A;&#x000A;<ul>&#x000A;  <li><code>test/integration</code>: Test Kitchen will look for tests to run under this directory. It allows you to put unit or other tests in <code>test/unit</code>, <code>spec</code>, <code>acceptance</code>, or wherever without mixing them up. This is configurable, if desired.</li>&#x000A;  <li><code>default</code>: This corresponds exactly to the <strong>Suite</strong> name we set up in the <code>.kitchen.yml</code> file. If we had a suite called <code>"server-only"</code>, then you would put tests for the server only suite under <code>test/integration/server-only</code>.</li>&#x000A;  <li><code>bats</code>: This tells Test Kitchen (and Busser) which Busser runner plugin needs to be installed on the remote instance. In other words the <code>bats</code> directory name will cause Busser to install <code>busser-bats</code> from RubyGems.</li>&#x000A;</ul>&#x000A;&#x000A;<p>Okay, long directories are long. Let's write a test. Create a new file called <code>test/integration/default/bats/git_installed.bats</code> with the following:</p>&#x000A;&#x000A;<pre class="highlight shell"><span class="c">#!/usr/bin/env bats</span>&#x000A;&#x000A;@test <span class="s2">"git binary is found in PATH"</span> <span class="o">{</span>&#x000A;  run which git&#x000A;  <span class="o">[</span> <span class="s2">"</span><span class="nv">$status</span><span class="s2">"</span> -eq 0 <span class="o">]</span>&#x000A;<span class="o">}</span>&#x000A;</pre>&#x000A;<p>Can you guess what this does even if you haven't seen a bats test before? If not, then take a look at bats' <a href="https://github.com/sstephenson/bats">README</a>. Otherwise your new friends in the <a href="http://webchat.freenode.net/?channel=chef">#chef</a> IRC chatroom should be able to help.</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='running-verify'>
+                  Running Kitchen Verify
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

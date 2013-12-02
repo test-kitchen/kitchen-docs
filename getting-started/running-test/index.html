@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 47.368421052631575%;'>
+          <span class='sr-only' id='47.368421052631575% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Running Kitchen Test</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/running-test.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>Now that we are masters of the Ubuntu platform, let's add support for CentOS to our cookbook. This shouldn't be too bad. Open <code>.kitchen.yml</code> in your editor and the <code>centos-6.4</code> line to your platforms list so that it resembles:</p>&#x000A;&#x000A;<pre class="highlight yaml"><span class="nn">---</span>&#x000A;<span class="s">driver_plugin</span><span class="pi">:</span> <span class="s">vagrant</span>&#x000A;<span class="s">driver_config</span><span class="pi">:</span>&#x000A;  <span class="s">require_chef_omnibus</span><span class="pi">:</span> <span class="s">true</span>&#x000A;&#x000A;<span class="s">platforms</span><span class="pi">:</span>&#x000A;<span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">ubuntu-12.04</span>&#x000A;<span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">centos-6.4</span>&#x000A;&#x000A;<span class="s">suites</span><span class="pi">:</span>&#x000A;<span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">default</span>&#x000A;  <span class="s">run_list</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">recipe[git]"</span><span class="pi">]</span>&#x000A;  <span class="s">attributes</span><span class="pi">:</span> <span class="pi">{}</span>&#x000A;</pre>&#x000A;<p>Now let's check the status of our instances:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;default-centos-64    Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;</pre>&#x000A;<p>We're going to use two shortcuts here in the next command:</p>&#x000A;&#x000A;<ul>&#x000A;  <li>Each Test Kitchen instance has a simple state machine that tracks where it is in its lifecyle. Given its current state and the desired state, the instance is smart enough to run all actions in between current and desired. In our next example we will take an instance from not created to verified in one command.</li>&#x000A;  <li>Any <code>kitchen</code> subcommand that takes an instance name as an argument can take a Ruby regular expression that will be used to glob a list of instances together. This means that <code>kitchen test ubuntu</code> would run the <strong>test</strong> action only the ubuntu instance. Note that the <strong>list</strong> subcommand also takes the regex-globbing argument so feel free to experiment there. In our next example we'll select the <code>default-centos-64</code> instance with simply <code>64</code>.</li>&#x000A;</ul>&#x000A;&#x000A;<p>Let's see how CentOS runs our cookbook:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify 64&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Creating &lt;default-centos-64&gt;...&#x000A;       Bringing machine 'default' up with 'virtualbox' provider...&#x000A;       [default] Importing base box 'opscode-centos-6.4'...&#x000A;       [default] Matching MAC address for NAT networking...&#x000A;       [default] Setting the name of the VM...&#x000A;       [default] Clearing any previously set forwarded ports...&#x000A;       [default] Creating shared folders metadata...&#x000A;       [default] Clearing any previously set network interfaces...&#x000A;       [default] Preparing network interfaces based on configuration...&#x000A;       [default] Forwarding ports...&#x000A;       [default] -- 22 =&gt; 2222 (adapter 1)&#x000A;       [default] Running 'pre-boot' VM customizations...&#x000A;       [default] Booting VM...&#x000A;       [default] Waiting for machine to boot. This may take a few minutes...&#x000A;       [default] Machine booted and ready!&#x000A;       [default] Setting hostname...&#x000A;       [default] Mounting shared folders...&#x000A;       Vagrant instance &lt;default-centos-64&gt; created.&#x000A;       Finished creating &lt;default-centos-64&gt; (0m54.63s).&#x000A;-----&gt; Converging &lt;default-centos-64&gt;...&#x000A;       Preparing files for transfer&#x000A;       Preparing current project directory as a cookbook&#x000A;       Removing non-cookbook files before transfer&#x000A;-----&gt; Installing Chef Omnibus (true)&#x000A;       downloading https://www.opscode.com/chef/install.sh&#x000A;         to file /tmp/install.sh&#x000A;       trying wget...&#x000A;       Downloading Chef  for el...&#x000A;       Installing Chef&#x000A;       warning: /tmp/tmp.4O86geCV/chef-.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY&#x000A;Preparing...                #####  ########################################### [100%]&#x000A;   1:chef                          ########################################### [100%]&#x000A;       Thank you for installing Chef!&#x000A;       Transfering files to &lt;default-centos-64&gt;&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Forking chef instance to converge...&#x000A;       Starting Chef Client, version 11.8.0&#x000A;       [2013-11-30T22:16:45+00:00] INFO: *** Chef 11.8.0 ***&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Chef-client pid: 2452&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Run List is [recipe[git::default]]&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Run List expands to [git::default]&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Starting Chef Run for default-centos-64&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Running start handlers&#x000A;       [2013-11-30T22:16:45+00:00] INFO: Start handlers complete.&#x000A;       Compiling Cookbooks...&#x000A;       Converging 2 resources&#x000A;       Recipe: git::default&#x000A;         * package[git] action install[2013-11-30T22:16:45+00:00] INFO: Processing package[git] action install (git::default line 1)&#x000A;        (up to date)&#x000A;         * log[Well, that was too easy] action write[2013-11-30T22:17:17+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)&#x000A;       [2013-11-30T22:17:17+00:00] INFO: Well, that was too easy&#x000A;&#x000A;&#x000A;       [2013-11-30T22:17:17+00:00] INFO: Chef Run complete in 31.73868597 seconds&#x000A;       [2013-11-30T22:17:17+00:00] INFO: Running report handlers&#x000A;       [2013-11-30T22:17:17+00:00] INFO: Report handlers complete&#x000A;       Chef Client finished, 1 resources updated&#x000A;       Finished converging &lt;default-centos-64&gt; (1m16.32s).&#x000A;-----&gt; Setting up &lt;default-centos-64&gt;...&#x000A;Fetching: thor-0.18.1.gem (100%)&#x000A;Fetching: busser-0.6.0.gem (100%)&#x000A;       Successfully installed thor-0.18.1&#x000A;       Successfully installed busser-0.6.0&#x000A;       2 gems installed&#x000A;-----&gt; Setting up Busser&#x000A;       Creating BUSSER_ROOT in /tmp/busser&#x000A;       Creating busser binstub&#x000A;       Plugin bats installed (version 0.1.0)&#x000A;-----&gt; Running postinstall for bats plugin&#x000A;             create  /tmp/bats20131130-2614-1jxkqra/bats&#x000A;             create  /tmp/bats20131130-2614-1jxkqra/bats.tar.gz&#x000A;       Installed Bats to /tmp/busser/vendor/bats/bin/bats&#x000A;             remove  /tmp/bats20131130-2614-1jxkqra&#x000A;       Finished setting up &lt;default-centos-64&gt; (0m44.50s).&#x000A;-----&gt; Verifying &lt;default-centos-64&gt;...&#x000A;       Suite path directory /tmp/busser/suites does not exist, skipping.&#x000A;       Uploading /tmp/busser/suites/bats/git_installed.bats (mode=0644)&#x000A;-----&gt; Running bats test suite&#x000A; ✓ git binary is found in PATH&#x000A;&#x000A;       1 test, 0 failures&#x000A;       Finished verifying &lt;default-centos-64&gt; (0m0.94s).&#x000A;-----&gt; Kitchen is finished. (2m56.69s)&#x000A;</pre>&#x000A;<p>Nice! We've verified that our cookbook works on Ubuntu 12.04 and CentOS 6.4. Since the CentOS instance will hang out for no good reason, let's kill it for now:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen destroy&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Destroying &lt;default-ubuntu-1204&gt;...&#x000A;       Finished destroying &lt;default-ubuntu-1204&gt; (0m0.00s).&#x000A;-----&gt; Destroying &lt;default-centos-64&gt;...&#x000A;       [default] Forcing shutdown of VM...&#x000A;       [default] Destroying VM and associated drives...&#x000A;       Vagrant instance &lt;default-centos-64&gt; destroyed.&#x000A;       Finished destroying &lt;default-centos-64&gt; (0m3.06s).&#x000A;-----&gt; Kitchen is finished. (0m3.36s)&#x000A;</pre>&#x000A;<p>Interesting. Test Kitchen tried to destroy both instances, one that was created and the other that was not. Which brings us to another tip with the <code>kitchen</code> command:</p>&#x000A;&#x000A;<blockquote>&#x000A;  <p><strong>Any <code>kitchen</code> subcommand without an instance argument will apply to all instances.</strong></p>&#x000A;</blockquote>&#x000A;&#x000A;<p>Let's make sure everything has been destroyed:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;default-centos-64    Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;</pre>&#x000A;<p>There's no production code change so far but we did modify the <code>.kitchen.yml</code> file, so let's commit that:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git add .kitchen.yml&#x000A;$ git commit -m "Add support for CentOS 6.4."&#x000A;[master 386a373] Add support for CentOS 6.4.&#x000A; 1 file changed, 1 insertion(+)&#x000A;</pre>&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='adding-platform'>
+                  Adding a Platform
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

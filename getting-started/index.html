@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 0.0%;'>
+          <span class='sr-only' id='0.0% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Introduction</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/index.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <h2 id="welcome-to-test-kitchen">Welcome to Test Kitchen!</h2>&#x000A;&#x000A;<p>No, contrary to popular belief, this has nothing to do with the cooking show, or the video game, and everything to do with streamlining and automating the process of getting infrastructure code under test, and into continuous integration.  </p>&#x000A;&#x000A;<h2 id="why-would-we-test-infrastructure-code">Why would we test infrastructure code?</h2>&#x000A;&#x000A;<p>Why would we want to do that?  Well, you test your application code, right?  You wouldn't think of putting a complex website into production without a test harness, would you?  Well increasingly web operations folk are using tools like Chef and Puppet to write infrastructure code that builds and maintains the platform that these complex applications sit upon.  This code - this infrastructure code - well, that needs to be tested too!  Test Kitchen makes this easy to do.</p>&#x000A;&#x000A;<h2 id="speeding-up-the-qa-cycle">Speeding up the QA cycle</h2>&#x000A;&#x000A;<p>At the dawn of time, the standard workflow for an engineer building a server was to follow a run book, or checklist, and build a machine ready for production.  After a couple of days, this would be passed to a QA engineer to verify that everything was in good shape.  The engineer would log onto the machine, check config files, run a variety of tests to make sure everything looked good, and then either pass the build or send it back for rework.</p>&#x000A;&#x000A;<p>The introduction of configuration management or infrastructure automation tools decreased the time taken to build the machines, and increased the quality and repeatability of the process.  However, the testing cycle is still slow.</p>&#x000A;&#x000A;<p>Test Kitchen takes the automation to the next level, and allows you to automate the testing process, to verify that your infrastructure code has done the right thing.  And more than that, it's designed specifically to make it easy to plug that testing process into your continuous integration workflow, so that as people collaborate on improving your infrastructure code, everyone gets rapid feedback on the impact of the work in progress.</p>&#x000A;&#x000A;<h2 id="a-high-level-overview">A High Level Overview</h2>&#x000A;&#x000A;<p>We're going to use Test Kitchen to help us write a simple Chef cookbook, complete with tests that verify that the cookbook does what it's supposed to do.  Test Kitchen comes at the process of software development that embraces the idea that writing the tests <em>first</em>, watching them fail, and then writing the code to make them pass is a great way to go.  Also known as <em>red, green, refactor</em>, it's a great way to write quality software.  By the end of this guide, you'll be familiar with this approach.</p>&#x000A;&#x000A;<h2 id="pre-requisites">Pre-requisites</h2>&#x000A;&#x000A;<p>This is the quick start guide for Test Kitchen.  It doesn't assume any great familiarity with Chef or Ruby, and takes you through the process of writing a Chef cookbook, with automated testing as standard.  Once you've finished this guide you'll be in good shape to start writing more cookbooks, or contributing to others in the community.  Ready to dive in? Great, let's go!</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='installing'>
+                  Installing Test Kitchen
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 89.47368421052632%;'>
+          <span class='sr-only' id='89.47368421052632% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Backfilling Platforms</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/backfilling-platforms.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>Let's see if our server recipe works on the older Ubuntu 10.04 platform. Fingers crossed, here we go:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify server-ubuntu-1004&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Creating &lt;server-ubuntu-1004&gt;...&#x000A;       Bringing machine 'default' up with 'virtualbox' provider...&#x000A;       [default] Importing base box 'opscode-ubuntu-10.04'...&#x000A;       [default] Matching MAC address for NAT networking...&#x000A;       [default] Setting the name of the VM...&#x000A;       [default] Clearing any previously set forwarded ports...&#x000A;       [default] Fixed port collision for 22 =&gt; 2222. Now on port 2200.&#x000A;       [default] Creating shared folders metadata...&#x000A;       [default] Clearing any previously set network interfaces...&#x000A;       [default] Preparing network interfaces based on configuration...&#x000A;       [default] Forwarding ports...&#x000A;       [default] -- 22 =&gt; 2200 (adapter 1)&#x000A;       [default] Running 'pre-boot' VM customizations...&#x000A;       [default] Booting VM...&#x000A;       [default] Waiting for machine to boot. This may take a few minutes...&#x000A;       [default] Machine booted and ready!&#x000A;       [default] Setting hostname...&#x000A;       [default] Mounting shared folders...&#x000A;       Vagrant instance &lt;server-ubuntu-1004&gt; created.&#x000A;       Finished creating &lt;server-ubuntu-1004&gt; (0m50.83s).&#x000A;-----&gt; Converging &lt;server-ubuntu-1004&gt;...&#x000A;       Preparing files for transfer&#x000A;       Resolving cookbook dependencies with Berkshelf...&#x000A;       Removing non-cookbook files before transfer&#x000A;-----&gt; Installing Chef Omnibus (true)&#x000A;       downloading https://www.opscode.com/chef/install.sh&#x000A;         to file /tmp/install.sh&#x000A;       trying wget...&#x000A;       Downloading Chef  for ubuntu...&#x000A;       Installing Chef&#x000A;       Selecting previously deselected package chef.&#x000A;       (Reading database ...&#x000A;(Reading database ... 44103 files and directories currently installed.)&#x000A;       Unpacking chef (from .../tmp.g6F0KqZE/chef__amd64.deb) ...&#x000A;       Setting up chef (11.8.0-1.ubuntu.10.04) ...&#x000A;       Thank you for installing Chef!&#x000A;&#x000A;       Transfering files to &lt;server-ubuntu-1004&gt;&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Forking chef instance to converge...&#x000A;       Starting Chef Client, version 11.8.0&#x000A;       [2013-12-02T02:44:11+00:00] INFO: *** Chef 11.8.0 ***&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Chef-client pid: 968&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Setting the run_list to ["recipe[git::server]"] from JSON&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Run List is [recipe[git::server]]&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Run List expands to [git::server]&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Starting Chef Run for server-ubuntu-1004&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Running start handlers&#x000A;       [2013-12-02T02:44:11+00:00] INFO: Start handlers complete.&#x000A;       Compiling Cookbooks...&#x000A;       Converging 9 resources&#x000A;       Recipe: git::default&#x000A;         * package[git-core] action install[2013-12-02T02:44:11+00:00] INFO: Processing package[git-core] action install (git::default line 2)&#x000A;&#x000A;           - install version 1:1.7.0.4-1ubuntu0.2 of package git-core&#x000A;&#x000A;         * log[Well, that was too easy] action write[2013-12-02T02:44:24+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 7)&#x000A;       [2013-12-02T02:44:24+00:00] INFO: Well, that was too easy&#x000A;&#x000A;&#x000A;       Recipe: runit::default&#x000A;         * service[runit] action nothing[2013-12-02T02:44:24+00:00] INFO: Processing service[runit] action nothing (runit::default line 20)&#x000A;        (skipped due to action :nothing)&#x000A;         * execute[start-runsvdir] action nothing[2013-12-02T02:44:24+00:00] INFO: Processing execute[start-runsvdir] action nothing (runit::default line 24)&#x000A;        (skipped due to action :nothing)&#x000A;         * execute[runit-hup-init] action nothing[2013-12-02T02:44:24+00:00] INFO: Processing execute[runit-hup-init] action nothing (runit::default line 33)&#x000A;        (skipped due to action :nothing)&#x000A;         * package[runit] action install[2013-12-02T02:44:24+00:00] INFO: Processing package[runit] action install (runit::default line 95)&#x000A;       Recipe: &lt;Dynamically Defined Resource&gt;&#x000A;         * cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed] action create[2013-12-02T02:44:25+00:00] INFO: Processing cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed] action create (dynamically defined)&#x000A;       [2013-12-02T02:44:25+00:00] INFO: cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed] created file /tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed&#x000A;&#x000A;           - create new file /tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed[2013-12-02T02:44:25+00:00] INFO: cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed] updated file contents /tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed&#x000A;&#x000A;           - update content in file /tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed from none to 9c6758&#x000A;        --- /tmp/kitchen/cache/preseed/runit/runit-2.0.0-1ubuntu4.seed  2013-12-02 02:44:25.030657115 +0000&#x000A;        +++ /tmp/.runit-2.0.0-1ubuntu4.seed20131202-968-79dchx  2013-12-02 02:44:25.030657115 +0000&#x000A;        @@ -1 +1,2 @@&#x000A;        +runit   runit/signalinit        boolean true&#x000A;&#x000A;       [2013-12-02T02:44:25+00:00] INFO: package[runit] pre-seeding package installation instructions&#x000A;&#x000A;           - preseed package runit&#x000A;&#x000A;           - install version 2.0.0-1ubuntu4 of package runit&#x000A;&#x000A;       [2013-12-02T02:44:26+00:00] INFO: package[runit] sending nothing action to execute[start-runsvdir] (immediate)&#x000A;       Recipe: runit::default&#x000A;         * execute[start-runsvdir] action nothing[2013-12-02T02:44:26+00:00] INFO: Processing execute[start-runsvdir] action nothing (runit::default line 24)&#x000A;        (skipped due to action :nothing)&#x000A;       [2013-12-02T02:44:26+00:00] INFO: package[runit] sending nothing action to execute[runit-hup-init] (immediate)&#x000A;         * execute[runit-hup-init] action nothing[2013-12-02T02:44:26+00:00] INFO: Processing execute[runit-hup-init] action nothing (runit::default line 33)&#x000A;        (skipped due to action :nothing)&#x000A;       Recipe: git::server&#x000A;         * package[git-daemon-run] action install[2013-12-02T02:44:26+00:00] INFO: Processing package[git-daemon-run] action install (git::server line 4)&#x000A;&#x000A;           - install version 1:1.7.0.4-1ubuntu0.2 of package git-daemon-run&#x000A;&#x000A;       Recipe: &lt;Dynamically Defined Resource&gt;&#x000A;         * service[git-daemon] action nothing[2013-12-02T02:44:29+00:00] INFO: Processing service[git-daemon] action nothing (dynamically defined)&#x000A;        (skipped due to action :nothing)&#x000A;       Recipe: git::server&#x000A;         * runit_service[git-daemon] action enable[2013-12-02T02:44:29+00:00] INFO: Processing runit_service[git-daemon] action enable (git::server line 6)&#x000A;       Recipe: &lt;Dynamically Defined Resource&gt;&#x000A;         * link[/etc/init.d/git-daemon] action create[2013-12-02T02:44:29+00:00] INFO: Processing link[/etc/init.d/git-daemon] action create (dynamically defined)&#x000A;       [2013-12-02T02:44:29+00:00] INFO: link[/etc/init.d/git-daemon] created&#x000A;&#x000A;           - create symlink at /etc/init.d/git-daemon to /usr/bin/sv&#x000A;&#x000A;       [2013-12-02T02:44:29+00:00] INFO: runit_service[git-daemon] configured&#x000A;&#x000A;           - configure service runit_service[git-daemon]&#x000A;&#x000A;       [2013-12-02T02:44:29+00:00] INFO: Chef Run complete in 17.598448178 seconds&#x000A;       [2013-12-02T02:44:29+00:00] INFO: Running report handlers&#x000A;       [2013-12-02T02:44:29+00:00] INFO: Report handlers complete&#x000A;       Chef Client finished, 7 resources updated&#x000A;       Finished converging &lt;server-ubuntu-1004&gt; (0m51.11s).&#x000A;-----&gt; Setting up &lt;server-ubuntu-1004&gt;...&#x000A;Fetching: thor-0.18.1.gem (100%)&#x000A;Fetching: busser-0.6.0.gem (100%)&#x000A;       Successfully installed thor-0.18.1&#x000A;       Successfully installed busser-0.6.0&#x000A;       2 gems installed&#x000A;-----&gt; Setting up Busser&#x000A;       Creating BUSSER_ROOT in /tmp/busser&#x000A;       Creating busser binstub&#x000A;       Plugin serverspec installed (version 0.2.5)&#x000A;-----&gt; Running postinstall for serverspec plugin&#x000A;       Finished setting up &lt;server-ubuntu-1004&gt; (0m14.07s).&#x000A;-----&gt; Verifying &lt;server-ubuntu-1004&gt;...&#x000A;       Suite path directory /tmp/busser/suites does not exist, skipping.&#x000A;       Uploading /tmp/busser/suites/serverspec/git_daemon_spec.rb (mode=0644)&#x000A;-----&gt; Running serverspec test suite&#x000A;       /opt/chef/embedded/bin/ruby -I/tmp/busser/suites/serverspec -S /opt/chef/embedded/bin/rspec /tmp/busser/suites/serverspec/git_daemon_spec.rb --color --format documentation&#x000A;&#x000A;       Git Daemon&#x000A;         is listening on port 9418&#x000A;         has a running service of git-daemon&#x000A;&#x000A;       Finished in 0.03267 seconds&#x000A;       2 examples, 0 failures&#x000A;       Finished verifying &lt;server-ubuntu-1004&gt; (0m1.22s).&#x000A;-----&gt; Kitchen is finished. (1m57.54s)&#x000A;</pre>&#x000A;<p>Well that was easy!</p>&#x000A;&#x000A;<p>I'm going to spare us all a great deal of pain and say that getting CentOS working with Git Daemon and runit is, well, kinda nuts. Ultimately not worth it for the sake of this guide. So should we leave a Platform/Suite combination lying around that we know we won't support? Naw!</p>&#x000A;&#x000A;<blockquote>&#x000A;  <p><strong>Add a platform name to an <code>excludes</code> array in a suite to remove the the platform/suite combination from testing.</strong></p>&#x000A;</blockquote>&#x000A;&#x000A;<p>Let's exclude the <code>server-centos-64</code> instance so that it doesn't accidentally get run. Update <code>.kitchen.yml</code> to look like the following:</p>&#x000A;&#x000A;<pre class="highlight yaml"><span class="nn">---</span>&#x000A;<span class="s">driver</span><span class="pi">:</span>&#x000A;  <span class="s">name</span><span class="pi">:</span> <span class="s">vagrant</span>&#x000A;&#x000A;<span class="s">provisioner</span><span class="pi">:</span>&#x000A;  <span class="s">name</span><span class="pi">:</span> <span class="s">chef_solo</span>&#x000A;&#x000A;<span class="s">platforms</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">ubuntu-12.04</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">ubuntu-10.04</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">centos-6.4</span>&#x000A;&#x000A;<span class="s">suites</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">default</span>&#x000A;    <span class="s">run_list</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">recipe[git::default]</span>&#x000A;    <span class="s">attributes</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">server</span>&#x000A;    <span class="s">run_list</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">recipe[git::server]</span>&#x000A;    <span class="s">attributes</span><span class="pi">:</span>&#x000A;    <span class="s">excludes</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">centos-6.4</span>&#x000A;</pre>&#x000A;<p>Now let's run <code>kitchen list</code> to ensure the instance is gone:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;default-ubuntu-1004  Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;default-centos-64    Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;server-ubuntu-1204   Vagrant  ChefSolo     Verified&#x000A;server-ubuntu-1004   Vagrant  ChefSolo     Verified&#x000A;</pre>&#x000A;<p>After so much success we should commit our working code. We want to leave our <code>Berksfile.lock</code> out of version control so first we'll edit <code>.gitignore</code> to read:</p>&#x000A;&#x000A;<pre class="highlight plaintext">Berksfile.lock&#x000A;.kitchen/&#x000A;.kitchen.local.yml&#x000A;</pre>&#x000A;<p>Now to commit:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git add .gitignore .kitchen.yml metadata.rb Berksfile recipes/server.rb test/integration/server/serverspec/git_daemon_spec.rb&#x000A;$ git commit -m "Add git-daemon support for Ubuntu 10.04 &amp; 12.04."&#x000A;[master 1bb6ead] Add git-daemon support for Ubuntu 10.04 &amp; 12.04.&#x000A; 6 files changed, 44 insertions(+)&#x000A; create mode 100644 Berksfile&#x000A; create mode 100644 recipes/server.rb&#x000A; create mode 100644 test/integration/server/serverspec/git_daemon_spec.rb&#x000A;</pre>&#x000A;<p>Finally let's destroy our running instances:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen destroy&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Destroying &lt;default-ubuntu-1204&gt;...&#x000A;       Finished destroying &lt;default-ubuntu-1204&gt; (0m0.00s).&#x000A;-----&gt; Destroying &lt;default-ubuntu-1004&gt;...&#x000A;       Finished destroying &lt;default-ubuntu-1004&gt; (0m0.00s).&#x000A;-----&gt; Destroying &lt;default-centos-64&gt;...&#x000A;       Finished destroying &lt;default-centos-64&gt; (0m0.00s).&#x000A;-----&gt; Destroying &lt;server-ubuntu-1204&gt;...&#x000A;       [default] Forcing shutdown of VM...&#x000A;       [default] Destroying VM and associated drives...&#x000A;       Vagrant instance &lt;server-ubuntu-1204&gt; destroyed.&#x000A;       Finished destroying &lt;server-ubuntu-1204&gt; (0m3.05s).&#x000A;-----&gt; Destroying &lt;server-ubuntu-1004&gt;...&#x000A;       [default] Forcing shutdown of VM...&#x000A;       [default] Destroying VM and associated drives...&#x000A;       Vagrant instance &lt;server-ubuntu-1004&gt; destroyed.&#x000A;       Finished destroying &lt;server-ubuntu-1004&gt; (0m3.31s).&#x000A;-----&gt; Kitchen is finished. (0m6.69s)&#x000A;</pre>&#x000A;<p>Okay, let's cut it off here, ship it!</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='next-steps'>
+                  Next Steps
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

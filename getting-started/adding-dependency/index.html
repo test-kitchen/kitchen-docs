@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 84.21052631578947%;'>
+          <span class='sr-only' id='84.21052631578947% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Adding a Dependency</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/adding-dependency.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>To add a dependency to our cookbook we edit the <code>metadata.rb</code> file and the runit cookbook with a <code>depends</code> statement:</p>&#x000A;&#x000A;<pre class="highlight ruby"><span class="nb">name</span> <span class="s2">"git"</span>&#x000A;<span class="n">version</span> <span class="s2">"0.1.0"</span>&#x000A;&#x000A;<span class="n">depends</span> <span class="s2">"runit"</span><span class="p">,</span> <span class="s2">"~&gt; 1.4.0"</span>&#x000A;</pre>&#x000A;<p>Note that we're adding a contstraint on the version of the runit cookbook. While this isn't strictly required it is something you want to consider as cookbooks can introduce breaking changes in the future.</p>&#x000A;&#x000A;<p>Now, let's see if we get to pass our tests:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify server-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Converging &lt;server-ubuntu-1204&gt;...&#x000A;       Preparing files for transfer&#x000A;       Preparing current project directory as a cookbook&#x000A;       Removing non-cookbook files before transfer&#x000A;       Transfering files to &lt;server-ubuntu-1204&gt;&#x000A;[2013-12-02T00:04:57+00:00] INFO: Forking chef instance to converge...&#x000A;Starting Chef Client, version 11.8.0&#x000A;[2013-12-02T00:04:57+00:00] INFO: *** Chef 11.8.0 ***&#x000A;[2013-12-02T00:04:57+00:00] INFO: Chef-client pid: 1462&#x000A;[2013-12-02T00:04:58+00:00] INFO: Setting the run_list to ["recipe[git::server]"] from JSON&#x000A;[2013-12-02T00:04:58+00:00] INFO: Run List is [recipe[git::server]]&#x000A;[2013-12-02T00:04:58+00:00] INFO: Run List expands to [git::server]&#x000A;[2013-12-02T00:04:58+00:00] INFO: Starting Chef Run for server-ubuntu-1204&#x000A;[2013-12-02T00:04:58+00:00] INFO: Running start handlers&#x000A;[2013-12-02T00:04:58+00:00] INFO: Start handlers complete.&#x000A;Compiling Cookbooks...&#x000A;[2013-12-02T00:04:58+00:00] ERROR: Running exception handlers&#x000A;[2013-12-02T00:04:58+00:00] ERROR: Exception handlers complete&#x000A;[2013-12-02T00:04:58+00:00] FATAL: Stacktrace dumped to /tmp/kitchen/cache/chef-stacktrace.out&#x000A;Chef Client failed. 0 resources updated&#x000A;[2013-12-02T00:04:58+00:00] ERROR: Cookbook runit not found. If you're loading runit from another cookbook, make sure you configure the dependency in your metadata&#x000A;[2013-12-02T00:04:58+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Converge failed on instance &lt;server-ubuntu-1204&gt;.&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Please see .kitchen/logs/server-ubuntu-1204.log for more details&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; ------Exception-------&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Class: Kitchen::ActionFailed&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; Message: SSH exited (1) for command: [sudo -E chef-solo --config /tmp/kitchen/solo.rb --json-attributes /tmp/kitchen/dna.json  --log_level info]&#x000A;&gt;&gt;&gt;&gt;&gt;&gt; ----------------------&#x000A;</pre>&#x000A;<p>Hmm, Chef still seems to be confused. We've told Chef that we depend on the runit cookbook yet it's still complaining about our metadata.</p>&#x000A;&#x000A;<p>What we need is a Chef cookbook dependency resolver tool to fetch our missing cookbooks so that Test Kitchen can use them in the Chef run. Here's the high level logic that Test Kitchen traverses in order to help you with your cookbook dependencies (again, first match wins):</p>&#x000A;&#x000A;<ol>&#x000A;  <li>Do you have a <code>Berksfile</code> in your project directory? If so, Test Kitchen will use <a href="http://berkshelf.com/">Berkshelf</a> to resolve dependencies.</li>&#x000A;  <li>Do you have a <code>Cheffile</code> in your project directory? If so, Test Kitchen will use <a href="https://github.com/applicationsonline/librarian-chef">Librarian-Chef</a> to resolve dependencies.</li>&#x000A;  <li>Do you have a <code>cookbooks/</code> directory in your project directory? If so, Test Kitchen will use that.</li>&#x000A;  <li>Do you have a <code>metadata.rb</code> file in your project directory? If so, then this project is a cookbook and Test Kitchen will use that.</li>&#x000A;  <li>Otherwise we're out of options, so Test Kitchen will create a fake cookbook and use that so that Chef has just enough to perform an empty Chef run.</li>&#x000A;</ol>&#x000A;&#x000A;<p>For this guide, we'll use Berkshelf to fetch runit for us.</p>&#x000A;&#x000A;<p>To get started we need to install the berkshelf gem–Test Kitchen doesn't depend on this library directly since it's one of many options:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ gem install berkshelf&#x000A;Fetching: i18n-0.6.5.gem (100%)&#x000A;Successfully installed i18n-0.6.5&#x000A;Fetching: multi_json-1.8.2.gem (100%)&#x000A;Successfully installed multi_json-1.8.2&#x000A;Fetching: activesupport-3.2.15.gem (100%)&#x000A;Successfully installed activesupport-3.2.15&#x000A;Fetching: addressable-2.3.5.gem (100%)&#x000A;Successfully installed addressable-2.3.5&#x000A;Fetching: buff-ruby_engine-0.1.0.gem (100%)&#x000A;Successfully installed buff-ruby_engine-0.1.0&#x000A;Fetching: buff-shell_out-0.1.1.gem (100%)&#x000A;Successfully installed buff-shell_out-0.1.1&#x000A;Fetching: hashie-2.0.5.gem (100%)&#x000A;Successfully installed hashie-2.0.5&#x000A;Fetching: chozo-0.6.1.gem (100%)&#x000A;Successfully installed chozo-0.6.1&#x000A;Fetching: multipart-post-1.2.0.gem (100%)&#x000A;Successfully installed multipart-post-1.2.0&#x000A;Fetching: faraday-0.8.8.gem (100%)&#x000A;Successfully installed faraday-0.8.8&#x000A;Fetching: minitar-0.5.4.gem (100%)&#x000A;Successfully installed minitar-0.5.4&#x000A;Fetching: retryable-1.3.3.gem (100%)&#x000A;Successfully installed retryable-1.3.3&#x000A;Fetching: buff-extensions-0.5.0.gem (100%)&#x000A;Successfully installed buff-extensions-0.5.0&#x000A;Fetching: varia_model-0.2.0.gem (100%)&#x000A;Successfully installed varia_model-0.2.0&#x000A;Fetching: buff-config-0.4.0.gem (100%)&#x000A;Successfully installed buff-config-0.4.0&#x000A;Fetching: buff-ignore-1.1.1.gem (100%)&#x000A;Successfully installed buff-ignore-1.1.1&#x000A;Fetching: timers-1.1.0.gem (100%)&#x000A;Successfully installed timers-1.1.0&#x000A;Fetching: celluloid-0.14.1.gem (100%)&#x000A;Successfully installed celluloid-0.14.1&#x000A;Fetching: nio4r-0.5.0.gem (100%)&#x000A;Building native extensions.  This could take a while...&#x000A;Successfully installed nio4r-0.5.0&#x000A;Fetching: celluloid-io-0.14.1.gem (100%)&#x000A;Successfully installed celluloid-io-0.14.1&#x000A;Fetching: erubis-2.7.0.gem (100%)&#x000A;Successfully installed erubis-2.7.0&#x000A;Fetching: mixlib-log-1.6.0.gem (100%)&#x000A;Successfully installed mixlib-log-1.6.0&#x000A;Fetching: mixlib-authentication-1.3.0.gem (100%)&#x000A;Successfully installed mixlib-authentication-1.3.0&#x000A;Fetching: net-http-persistent-2.9.gem (100%)&#x000A;Successfully installed net-http-persistent-2.9&#x000A;Fetching: solve-0.8.2.gem (100%)&#x000A;Successfully installed solve-0.8.2&#x000A;Fetching: ffi-1.9.3.gem (100%)&#x000A;Building native extensions.  This could take a while...&#x000A;Successfully installed ffi-1.9.3&#x000A;Fetching: gssapi-1.0.3.gem (100%)&#x000A;Successfully installed gssapi-1.0.3&#x000A;Fetching: httpclient-2.3.4.1.gem (100%)&#x000A;Successfully installed httpclient-2.3.4.1&#x000A;Fetching: mini_portile-0.5.2.gem (100%)&#x000A;Successfully installed mini_portile-0.5.2&#x000A;Fetching: nokogiri-1.6.0.gem (100%)&#x000A;Building native extensions.  This could take a while...&#x000A;Successfully installed nokogiri-1.6.0&#x000A;Fetching: rubyntlm-0.1.1.gem (100%)&#x000A;Successfully installed rubyntlm-0.1.1&#x000A;Fetching: uuidtools-2.1.4.gem (100%)&#x000A;Successfully installed uuidtools-2.1.4&#x000A;Fetching: builder-3.2.2.gem (100%)&#x000A;Successfully installed builder-3.2.2&#x000A;Fetching: nori-1.1.5.gem (100%)&#x000A;Successfully installed nori-1.1.5&#x000A;Fetching: rack-1.5.2.gem (100%)&#x000A;Successfully installed rack-1.5.2&#x000A;Fetching: httpi-0.9.7.gem (100%)&#x000A;Successfully installed httpi-0.9.7&#x000A;Fetching: wasabi-1.0.0.gem (100%)&#x000A;Successfully installed wasabi-1.0.0&#x000A;Fetching: gyoku-1.1.0.gem (100%)&#x000A;Successfully installed gyoku-1.1.0&#x000A;Fetching: akami-1.2.0.gem (100%)&#x000A;Successfully installed akami-1.2.0&#x000A;Fetching: savon-0.9.5.gem (100%)&#x000A;Successfully installed savon-0.9.5&#x000A;Fetching: little-plugger-1.1.3.gem (100%)&#x000A;Successfully installed little-plugger-1.1.3&#x000A;Fetching: logging-1.8.1.gem (100%)&#x000A;Successfully installed logging-1.8.1&#x000A;Fetching: winrm-1.1.3.gem (100%)&#x000A;Successfully installed winrm-1.1.3&#x000A;Fetching: ridley-1.5.3.gem (100%)&#x000A;Successfully installed ridley-1.5.3&#x000A;Fetching: rbzip2-0.2.0.gem (100%)&#x000A;Successfully installed rbzip2-0.2.0&#x000A;Fetching: berkshelf-2.0.10.gem (100%)&#x000A;Successfully installed berkshelf-2.0.10&#x000A;46 gems installed&#x000A;</pre>&#x000A;<p>Next we'll create the smallest <code>Berksfile</code>, using your editor of choice:</p>&#x000A;&#x000A;<pre class="highlight ruby"><span class="n">site</span> <span class="ss">:opscode</span>&#x000A;&#x000A;<span class="n">metadata</span>&#x000A;</pre>&#x000A;<p>The <code>metadata</code> command tells Berkshelf that the current project is a Chef cookbook and to use its <code>metadata.rb</code> as a source of cookbook dependencies.</p>&#x000A;&#x000A;<p>Now, let's re-run <code>kitchen verify</code>:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen verify server-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Converging &lt;server-ubuntu-1204&gt;...&#x000A;       Preparing files for transfer&#x000A;       Resolving cookbook dependencies with Berkshelf...&#x000A;       Removing non-cookbook files before transfer&#x000A;       Transfering files to &lt;server-ubuntu-1204&gt;&#x000A;[2013-12-02T02:36:51+00:00] INFO: Forking chef instance to converge...&#x000A;Starting Chef Client, version 11.8.0&#x000A;[2013-12-02T02:36:51+00:00] INFO: *** Chef 11.8.0 ***&#x000A;[2013-12-02T02:36:51+00:00] INFO: Chef-client pid: 1621&#x000A;[2013-12-02T02:36:51+00:00] INFO: Setting the run_list to ["recipe[git::server]"] from JSON&#x000A;[2013-12-02T02:36:51+00:00] INFO: Run List is [recipe[git::server]]&#x000A;[2013-12-02T02:36:51+00:00] INFO: Run List expands to [git::server]&#x000A;[2013-12-02T02:36:51+00:00] INFO: Starting Chef Run for server-ubuntu-1204&#x000A;[2013-12-02T02:36:51+00:00] INFO: Running start handlers&#x000A;[2013-12-02T02:36:51+00:00] INFO: Start handlers complete.&#x000A;Compiling Cookbooks...&#x000A;Converging 9 resources&#x000A;Recipe: git::default&#x000A;  * package[git] action install[2013-12-02T02:36:51+00:00] INFO: Processing package[git] action install (git::default line 4)&#x000A;&#x000A;    - install version 1:1.7.9.5-1 of package git&#x000A;&#x000A;  * log[Well, that was too easy] action write[2013-12-02T02:37:08+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 7)&#x000A;[2013-12-02T02:37:08+00:00] INFO: Well, that was too easy&#x000A;&#x000A;&#x000A;Recipe: runit::default&#x000A;  * service[runit] action nothing[2013-12-02T02:37:08+00:00] INFO: Processing service[runit] action nothing (runit::default line 20)&#x000A; (skipped due to action :nothing)&#x000A;  * execute[start-runsvdir] action nothing[2013-12-02T02:37:08+00:00] INFO: Processing execute[start-runsvdir] action nothing (runit::default line 24)&#x000A; (skipped due to action :nothing)&#x000A;  * execute[runit-hup-init] action nothing[2013-12-02T02:37:08+00:00] INFO: Processing execute[runit-hup-init] action nothing (runit::default line 33)&#x000A; (skipped due to action :nothing)&#x000A;  * package[runit] action install[2013-12-02T02:37:08+00:00] INFO: Processing package[runit] action install (runit::default line 95)&#x000A;Recipe: &lt;Dynamically Defined Resource&gt;&#x000A;  * cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed] action create[2013-12-02T02:37:08+00:00] INFO: Processing cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed] action create (dynamically defined)&#x000A;[2013-12-02T02:37:08+00:00] INFO: cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed] created file /tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed&#x000A;&#x000A;    - create new file /tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed[2013-12-02T02:37:08+00:00] INFO: cookbook_file[/tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed] updated file contents /tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed&#x000A;&#x000A;    - update content in file /tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed from none to 9c6758&#x000A;        --- /tmp/kitchen/cache/preseed/runit/runit-2.1.1-6.2ubuntu2.seed        2013-12-02 02:37:08.627719079 +0000&#x000A;        +++ /tmp/.runit-2.1.1-6.2ubuntu2.seed20131202-1621-1hysxxf      2013-12-02 02:37:08.635723077 +0000&#x000A;        @@ -1 +1,2 @@&#x000A;        +runit   runit/signalinit        boolean true&#x000A;&#x000A;[2013-12-02T02:37:08+00:00] INFO: package[runit] pre-seeding package installation instructions&#x000A;&#x000A;    - preseed package runit&#x000A;    - install version 2.1.1-6.2ubuntu2 of package runit&#x000A;&#x000A;[2013-12-02T02:37:11+00:00] INFO: package[runit] sending nothing action to execute[start-runsvdir] (immediate)&#x000A;Recipe: runit::default&#x000A;  * execute[start-runsvdir] action nothing[2013-12-02T02:37:11+00:00] INFO: Processing execute[start-runsvdir] action nothing (runit::default line 24)&#x000A; (skipped due to action :nothing)&#x000A;[2013-12-02T02:37:11+00:00] INFO: package[runit] sending nothing action to execute[runit-hup-init] (immediate)&#x000A;  * execute[runit-hup-init] action nothing[2013-12-02T02:37:11+00:00] INFO: Processing execute[runit-hup-init] action nothing (runit::default line 33)&#x000A; (skipped due to action :nothing)&#x000A;Recipe: git::server&#x000A;  * package[git-daemon-run] action install[2013-12-02T02:37:11+00:00] INFO: Processing package[git-daemon-run] action install (git::server line 4)&#x000A;&#x000A;    - install version 1:1.7.9.5-1 of package git-daemon-run&#x000A;&#x000A;Recipe: &lt;Dynamically Defined Resource&gt;&#x000A;  * service[git-daemon] action nothing[2013-12-02T02:37:12+00:00] INFO: Processing service[git-daemon] action nothing (dynamically defined)&#x000A; (skipped due to action :nothing)&#x000A;Recipe: git::server&#x000A;  * runit_service[git-daemon] action enable[2013-12-02T02:37:12+00:00] INFO: Processing runit_service[git-daemon] action enable (git::server line 6)&#x000A;Recipe: &lt;Dynamically Defined Resource&gt;&#x000A;  * link[/etc/init.d/git-daemon] action create[2013-12-02T02:37:12+00:00] INFO: Processing link[/etc/init.d/git-daemon] action create (dynamically defined)&#x000A;[2013-12-02T02:37:12+00:00] INFO: link[/etc/init.d/git-daemon] created&#x000A;&#x000A;    - create symlink at /etc/init.d/git-daemon to /usr/bin/sv&#x000A;&#x000A;[2013-12-02T02:37:12+00:00] INFO: runit_service[git-daemon] configured&#x000A;&#x000A;    - configure service runit_service[git-daemon]&#x000A;&#x000A;[2013-12-02T02:37:12+00:00] INFO: Chef Run complete in 21.335525906 seconds&#x000A;[2013-12-02T02:37:12+00:00] INFO: Running report handlers&#x000A;[2013-12-02T02:37:12+00:00] INFO: Report handlers complete&#x000A;Chef Client finished, 7 resources updated&#x000A;       Finished converging &lt;server-ubuntu-1204&gt; (0m24.09s).&#x000A;-----&gt; Setting up &lt;server-ubuntu-1204&gt;...&#x000A;Fetching: thor-0.18.1.gem (100%)&#x000A;Fetching: busser-0.6.0.gem (100%)&#x000A;Successfully installed thor-0.18.1&#x000A;Successfully installed busser-0.6.0&#x000A;2 gems installed&#x000A;-----&gt; Setting up Busser&#x000A;       Creating BUSSER_ROOT in /tmp/busser&#x000A;       Creating busser binstub&#x000A;       Plugin serverspec installed (version 0.2.5)&#x000A;-----&gt; Running postinstall for serverspec plugin&#x000A;       Finished setting up &lt;server-ubuntu-1204&gt; (0m15.49s).&#x000A;-----&gt; Verifying &lt;server-ubuntu-1204&gt;...&#x000A;       Suite path directory /tmp/busser/suites does not exist, skipping.&#x000A;Uploading /tmp/busser/suites/serverspec/git_daemon_spec.rb (mode=0644)&#x000A;-----&gt; Running serverspec test suite&#x000A;/opt/chef/embedded/bin/ruby -I/tmp/busser/suites/serverspec -S /opt/chef/embedded/bin/rspec /tmp/busser/suites/serverspec/git_daemon_spec.rb --color --format documentation&#x000A;&#x000A;Git Daemon&#x000A;  is listening on port 9418&#x000A;  has a running service of git-daemon&#x000A;&#x000A;Finished in 0.0344 seconds&#x000A;2 examples, 0 failures&#x000A;       Finished verifying &lt;server-ubuntu-1204&gt; (0m1.20s).&#x000A;-----&gt; Kitchen is finished. (0m41.16s)&#x000A;</pre>&#x000A;<p>Awesome, and tests pass! Did you notice the <code>Resolving cookbook dependencies with Berkshelf...</code> line near the beginning? Confirming our success:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list server&#x000A;Instance            Driver   Provisioner  Last Action&#x000A;server-ubuntu-1204  Vagrant  ChefSolo     Verified&#x000A;server-ubuntu-1004  Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;server-centos-64    Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;</pre>&#x000A;<p>Now let's backfill the other platforms.</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='backfilling-platforms'>
+                  Backfilling Platforms
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>

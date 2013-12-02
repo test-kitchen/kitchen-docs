@@ -1,0 +1,110 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+    <title>kitchen-docs preview server</title>
+    <meta content='Test Kitchen' name='description'>
+    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
+    <link href="/css/kitchen.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Getting Started Guide</h1>
+      <div class='progress'>
+        <div aria-valuemax='100' aria-valuemin='0' aria-valuenow='guide_progress' class='progress-bar' role='progressbar' style='width: 15.789473684210526%;'>
+          <span class='sr-only' id='15.789473684210526% Complete'></span>
+        </div>
+      </div>
+    </div>
+    <div class='container guide'>
+      <div class='row'>
+        <div class='article col-md-8'>
+          <span id='githubs'>
+            <h2>Creating a Cookbook</h2>
+            <a href='http://github.com/heavywater/kitchen-docs/edit/master/source/getting-started/creating-cookbook.md'>
+              <div class='glyphicon glyphicon-pencil'></div>
+            </a>
+          </span>
+          <p>In order to keep our worked example as simple as possible let's create a Chef cookbook to automate the installation and management of the <a href="http://git-scm.com/">Git</a> distributed version control tool. It's true that there is already a very capable <a href="http://community.opscode.com/cookbooks/git">Git cookbook</a> availble on the <a href="http://community.opscode.com/cookbooks">Opscode Community Site</a> (not to mention we just installed Git by hand in the <strong>Installing</strong> section) but this lets us focus on Test Kitchen usage and workflow rather than <a href="http://www.youtube.com/watch?v=OU8ihx3nT6I">building more awesome</a>.</p>&#x000A;&#x000A;<p>In the "real world" most Chef cookbook authors are likely to use a cookbook project generator but we're going to skip that step in the interests of transparency. A simple Chef cookbook has very few moving parts so let's start from there.</p>&#x000A;&#x000A;<p>First of all, let's create an empty Git repository and enter into that directory:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git init git-cookbook&#x000A;Initialized empty Git repository in /tmpt-cookbook/git-cookbook/.git/&#x000A;$ cd git-cookbook&#x000A;</pre>&#x000A;<p>Note that the directory doesn't matter to Test Kitchen so feel free to call this directory <code>git</code>, <code>chef-git</code>, <code>chef-git-cookbook</code>, or <code>fuzzypants_git</code>.</p>&#x000A;&#x000A;<p>Next we need a <a href="http://docs.opscode.com/config_rb_metadata.html">metadata.rb</a> file so that various Chef-aware tooling can understand our cookbook. Test Kitchen is one such tool.  All it really cares about are the <strong>name</strong> and <strong>version</strong> attributes of the cookbook. Use your favorite text editor and create a file called <code>metadata.rb</code> with the following:</p>&#x000A;&#x000A;<pre class="highlight ruby"><span class="nb">name</span> <span class="s2">"git"</span>&#x000A;<span class="n">version</span> <span class="s2">"0.1.0"</span>&#x000A;</pre>&#x000A;<p>Now let's setup the default recipe in this cookbook. It doesn't have to do anything for the moment but if we add it, Test Kitchen can wire this up for us without any further work.</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ mkdir recipes&#x000A;$ touch recipes/default.rb&#x000A;</pre>&#x000A;<blockquote>&#x000A;  <p><strong>Congratulations. You've authored a Chef cookbook.</strong></p>&#x000A;</blockquote>&#x000A;&#x000A;<p>Okay, it's a little light on implementation but let's commit it anyway:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git add metadata.rb recipes/default.rb&#x000A;$ git commit -m "Git Chef cookbook - the lean version"&#x000A;[master (root-commit) 087db85] Git Chef cookbook - the lean version&#x000A; 1 file changed, 2 insertions(+)&#x000A; create mode 100644 metadata.rb&#x000A; create mode 100644 recipes/default.rb&#x000A;</pre>&#x000A;<p>Now we'll add Test Kitchen to our project by using the <strong>init</strong> subcommand:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen init --driver=kitchen-vagrant&#x000A;      create  .kitchen.yml&#x000A;      create  test/integration/default&#x000A;      create  .gitignore&#x000A;      append  .gitignore&#x000A;      append  .gitignore&#x000A;         run  gem install kitchen-vagrant from "."&#x000A;Fetching: kitchen-vagrant-0.12.0.gem (100%)&#x000A;Successfully installed kitchen-vagrant-0.12.0&#x000A;1 gem installed&#x000A;</pre>&#x000A;<p>What's going on here? The <code>kitchen init</code> subcommand will create an initial configuration file for Test Kitchen called <code>.kitchen.yml</code>. We'll look at that in a moment.</p>&#x000A;&#x000A;<p>A few directories were created but these are only a convenience–you don't strictly need <code>test/integration/default</code> in your project.</p>&#x000A;&#x000A;<p>You can see that you have a <code>.gitignore</code> file in your project's root which will tell Git to never commit a directory called <code>.kitchen</code> and something called <code>.kitchen.local.yml</code>. Don't worry about these for now, just some housekeeping details.</p>&#x000A;&#x000A;<p>Finally, a gem called <code>kitchen-vagrant</code> was installed. By itself Test Kitchen can't do very much. It needs one or more <strong>Drivers</strong> which are responsible for managing the virtual machines we need for testing. At present there are many different Test Kitchen Drivers but we're going to stick with the <a href="https://github.com/opscode/kitchen-vagrant">Kitchen Vagrant Driver</a> for now.</p>&#x000A;&#x000A;<table>&#x000A;  <tbody>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>Pro-Tip</td>&#x000A;    </tr>&#x000A;    <tr>&#x000A;      <td> </td>&#x000A;      <td>The Kitchen Vagrant Driver is the default driver chosen when you omit <code>--driver=kitchen-vagrant</code> from the command. After a few projects, feel free to simply <code>kitchen init</code>.</td>&#x000A;    </tr>&#x000A;  </tbody>&#x000A;</table>&#x000A;&#x000A;<p>Let's turn our attention to the <code>.kitchen.yml</code> file for a minute. While Test Kitchen may have created the initial file automatically, it's expected that you will read and edit this file. After all, you know what you want to test… right? Opening this file in your editor of choice we see something like the following:</p>&#x000A;&#x000A;<pre class="highlight yaml"><span class="nn">---</span>&#x000A;<span class="s">driver</span><span class="pi">:</span>&#x000A;  <span class="s">name</span><span class="pi">:</span> <span class="s">vagrant</span>&#x000A;&#x000A;<span class="s">provisioner</span><span class="pi">:</span>&#x000A;  <span class="s">name</span><span class="pi">:</span> <span class="s">chef_solo</span>&#x000A;&#x000A;<span class="s">platforms</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">ubuntu-12.04</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">centos-6.4</span>&#x000A;&#x000A;<span class="s">suites</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">default</span>&#x000A;    <span class="s">run_list</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">recipe[git::default]</span>&#x000A;    <span class="s">attributes</span><span class="pi">:</span>&#x000A;</pre>&#x000A;<p>Very briefly we can cover the 4 main sections you're likely to find in a <code>.kitchen.yml</code> file:</p>&#x000A;&#x000A;<ul>&#x000A;  <li><code>driver</code>: This is where we configure the behaviour of the Kitchen Driver - the component that is responsible for creating a machine that we'll use to test our cookbook.  Here we set up basics like credentials, ssh usernames, sudo requirements, etc. Each Driver is reponsible for requiring and using the configuration here. Under this section we have <code>driver.name</code>: This tells Test Kitchen that we want to use the <code>kitchen-vagrant</code> driver by default unless otherwise specified.</li>&#x000A;  <li><code>provisioner</code>: This tells Test Kitchen how to run Chef, to apply the code in our cookbook to the machine under test.  The default and simplest approach is to use <code>chef-solo</code>, but other options are available, and ultimately Test Kitchen doesn't care how the infrastructure is built - it could theoretically be with Puppet, Ansible, or Perl for all it cares.</li>&#x000A;  <li><code>platforms</code>: This is a list of operation systems on which we want to run our code. Note that the operation system's version, architecture, cloud environment, etc. might be relavent to what Test Kitchen considers a <strong>Platform</strong>.</li>&#x000A;  <li><code>suites</code>: This section defines what we want to test.  It includes the Chef run-list and any node attribute setups that we want run on each <strong>Platform</strong> above. For example, we might want to test the MySQL client cookbook code seperately from the server cookbook code for maximum isolation.</li>&#x000A;</ul>&#x000A;&#x000A;<p>Let's say for argument's sake that we only care about running our Chef cookbook on Ubuntu 12.04 distributions. In that case, we can edit the <code>.kitchen.yml</code> file so that the list of <code>platforms</code> has only one entry like so:</p>&#x000A;&#x000A;<pre class="highlight yaml"><span class="nn">---</span>&#x000A;<span class="s">driver</span><span class="pi">:</span>&#x000A;  <span class="s">name</span><span class="pi">:</span> <span class="s">vagrant</span>&#x000A;&#x000A;<span class="s">provisioner</span><span class="pi">:</span>&#x000A;  <span class="s">name</span><span class="pi">:</span> <span class="s">chef_solo</span>&#x000A;&#x000A;<span class="s">platforms</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">ubuntu-12.04</span>&#x000A;&#x000A;<span class="s">suites</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="s">name</span><span class="pi">:</span> <span class="s">default</span>&#x000A;    <span class="s">run_list</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">recipe[git::default]</span>&#x000A;    <span class="s">attributes</span><span class="pi">:</span>&#x000A;</pre>&#x000A;<p>To see the results of our work, let's run the <code>kitchen list</code> subcommand:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     &lt;Not Created&gt;&#x000A;</pre>&#x000A;<p>So what's this <code>default-ubuntu-1204</code> thing and what's an "Instance"? A Test Kitchen <strong>Instance</strong> is a pairwise combination of a <strong>Suite</strong> and a <strong>Platform</strong> as laid out in your <code>.kitchen.yml</code> file. Test Kitchen has auto-named your only instance by combining the <strong>Suite</strong> name (<code>"default"</code>) and the <strong>Platform</strong> name (<code>"ubuntu-12.04"</code>) into a form that is safe for DNS and hostname records, namely <code>"default-ubuntu-1204"</code>.</p>&#x000A;&#x000A;<p>Okay, let's spin this <strong>Instance</strong> up to see what happens. Test Kitchen calls this the <strong>Create Action</strong>. We're going to be painfully explicit and ask Test Kitchen to only create the <code>default-ubuntu-1204</code> instance:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen create default-ubuntu-1204&#x000A;-----&gt; Starting Kitchen (v1.0.0)&#x000A;-----&gt; Creating &lt;default-ubuntu-1204&gt;...&#x000A;       Bringing machine 'default' up with 'virtualbox' provider...&#x000A;       [default] Importing base box 'opscode-ubuntu-12.04'...&#x000A;       [default] Matching MAC address for NAT networking...&#x000A;       [default] Setting the name of the VM...&#x000A;       [default] Clearing any previously set forwarded ports...&#x000A;       [default] Creating shared folders metadata...&#x000A;       [default] Clearing any previously set network interfaces...&#x000A;       [default] Preparing network interfaces based on configuration...&#x000A;       [default] Forwarding ports...&#x000A;       [default] -- 22 =&gt; 2222 (adapter 1)&#x000A;       [default] Running 'pre-boot' VM customizations...&#x000A;       [default] Booting VM...&#x000A;[default] Waiting for machine to boot. This may take a few minutes...       [default] Machine booted and ready!&#x000A;       [default] Setting hostname...&#x000A;       [default] Mounting shared folders...&#x000A;       Vagrant instance &lt;default-ubuntu-1204&gt; created.&#x000A;       Finished creating &lt;default-ubuntu-1204&gt; (0m53.30s).&#x000A;-----&gt; Kitchen is finished. (0m53.59s)&#x000A;</pre>&#x000A;<p>If you are a Vagrant user then the line containing <code>vagrant up --no-provision</code> will look familiar. Let's check the status of our instance now:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ kitchen list&#x000A;Instance             Driver   Provisioner  Last Action&#x000A;default-ubuntu-1204  Vagrant  ChefSolo     Created&#x000A;</pre>&#x000A;<p>Let's commit our glorious work:</p>&#x000A;&#x000A;<pre class="highlight plaintext">$ git add .gitignore .kitchen.yml&#x000A;$ git commit -m "Add Test Kitchen to the project."&#x000A;[master 431068c] Add Test Kitchen to the project.&#x000A; 2 files changed, 17 insertions(+)&#x000A; create mode 100644 .gitignore&#x000A; create mode 100644 .kitchen.yml&#x000A;</pre>&#x000A;<p>Ok, we have a instance created and ready for some Chef code. Onward!</p>&#x000A;&#x000A;
+          <hr>
+          <div id='suggestions'>
+            <div class='row'>
+              <div class='col-md-7 pull-left'>
+                <span></span>
+              </div>
+              <div class='col-md-5 pull-right'>
+                <a class='button btn btn-primary' href='writing-recipe'>
+                  Writing a Recipe
+                  <i class='glyphicon glyphicon-circle-arrow-right'></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='col-md-4'>
+          <ul class='sections'>
+            <li>
+              <a href='installing'>Installing Test Kitchen</a>
+            </li>
+            <li>
+              <a href='getting-help'>Getting Help</a>
+            </li>
+            <li>
+              <a href='creating-cookbook'>Creating a Cookbook</a>
+            </li>
+            <li>
+              <a href='writing-recipe'>Writing a Recipe</a>
+            </li>
+            <li>
+              <a href='running-converge'>Running Kitchen Converge</a>
+            </li>
+            <li>
+              <a href='manually-verifying'>Manually Verifying</a>
+            </li>
+            <li>
+              <a href='writing-test'>Writing a Test</a>
+            </li>
+            <li>
+              <a href='running-verify'>Running Kitchen Verify</a>
+            </li>
+            <li>
+              <a href='running-test'>Running Kitchen Test</a>
+            </li>
+            <li>
+              <a href='adding-platform'>Adding a Platform</a>
+            </li>
+            <li>
+              <a href='fixing-converge'>Fixing Converge</a>
+            </li>
+            <li>
+              <a href='adding-feature'>Adding a New Feature</a>
+            </li>
+            <li>
+              <a href='adding-suite'>Adding a Suite</a>
+            </li>
+            <li>
+              <a href='writing-server-test'>Writing a Server Test</a>
+            </li>
+            <li>
+              <a href='writing-failing-recipe'>Writing a Failing Recipe</a>
+            </li>
+            <li>
+              <a href='adding-dependency'>Adding a Dependency</a>
+            </li>
+            <li>
+              <a href='backfilling-platforms'>Backfilling Platforms</a>
+            </li>
+            <li>
+              <a href='next-steps'>Next Steps</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+  <script src="/js/all.js" type="text/javascript"></script>
+</html>
