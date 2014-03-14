@@ -22,7 +22,7 @@ To keep things simple we're going to use the `busser-bats` runner plugin which u
 We need to put our test files in a specifc location, so let's create the directory:
 
 ~~~
-$ mkdir -p test/integration/default/bats
+mkdir -p test/integration/default/bats
 ~~~
 
 It looks long and dense, but each directory has some meaning to Test Kitchen and the Busser helper:
