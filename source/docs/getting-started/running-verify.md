@@ -68,7 +68,7 @@ $ git commit -m "Add bats test for default suite."
  create mode 100644 test/integration/default/bats/git_installed.bats
 ~~~
 
-So what would a failing test look like? Let's see. Open `test/integration/default/bats/git_installed.bats` in your editor of choice and edit the test so that we're looking for the `gittt` command:
+So what would a failing test look like? Let's see. Open `test/integration/default/bats/git_installed.bats` in your editor of choice and edit the test so that we're looking for the `git` command:
 
 ~~~sh
 #!/usr/bin/env bats
