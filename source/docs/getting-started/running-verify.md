@@ -68,13 +68,13 @@ $ git commit -m "Add bats test for default suite."
  create mode 100644 test/integration/default/bats/git_installed.bats
 ~~~
 
-So what would a failing test look like? Let's see. Open `test/integration/default/bats/git_installed.bats` in your editor of choice and edit the test so that we're looking for the `gittt` command:
+So what would a failing test look like? Let's see. Open `test/integration/default/bats/git_installed.bats` in your editor of choice and edit the test so that we're looking for the `git` command:
 
 ~~~sh
 #!/usr/bin/env bats
 
-@test "gittt binary is found in PATH" {
-  run which gittt
+@test "git binary is found in PATH" {
+  run which git
   [ "$status" -eq 0 ]
 }
 ~~~
@@ -88,7 +88,7 @@ $ kitchen verify default-ubuntu-1204
        Removing /tmp/busser/suites/bats
 Uploading /tmp/busser/suites/bats/git_installed.bats (mode=0644)
 -----> Running bats test suite
- ✗ gittt binary is found in PATH
+ ✗ git binary is found in PATH
    (in test file /tmp/busser/suites/bats/git_installed.bats, line 5)
 
 1 test, 1 failure
@@ -103,7 +103,7 @@ $ echo $?
 10
 ~~~
 
-Not quite as pretty and happy looking. Thanks to our well-crafted test case name our bats test is telling us what is up: `✗ gittt binary is found in PATH`. Yep, not a surprise. Also note that the exit code is no longer **0** but is **10**.
+Not quite as pretty and happy looking. Thanks to our well-crafted test case name our bats test is telling us what is up: `✗ git binary is found in PATH`. Yep, not a surprise. Also note that the exit code is no longer **0** but is **10**.
 
 A quick revert back to our clean code gets us back to green:
 
