@@ -59,6 +59,9 @@ guide:
     url: "backfilling-platforms"
     name: "Backfilling Platforms"
   -
+    url: "drivers-configuration"
+    name: "Optional Driver Configuration"
+  -
     url: "next-steps"
     name: "Next Steps"
 ---
