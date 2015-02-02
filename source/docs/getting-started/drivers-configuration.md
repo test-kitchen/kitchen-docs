@@ -24,3 +24,5 @@ works exactly like how you'd expect it to.
 
 Doubly, as you can see the [Vagrantfile private_network](https://docs.vagrantup.com/v2/networking/private_network.html) looks just
 like you'd expect it to.
+
+If you would like more information the [kitchen-vagrant](https://github.com/test-kitchen/kitchen-vagrant) github page has more.
