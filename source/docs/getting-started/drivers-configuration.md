@@ -14,6 +14,9 @@ you'll need it.
   - ["forwarded_port", {guest: 80, host: 8080, auto_correct: true}]
   - ["forwarded_port", {guest: 443, host: 8443}]
   - ["private_network", {ip: "10.0.0.1"}]
+  customize:
+    cpus: 2
+    memory: 4096
 ~~~
 
 As you can see this very close to the [Vagrantfile forwarded_port](https://docs.vagrantup.com/v2/networking/forwarded_ports.html) and
