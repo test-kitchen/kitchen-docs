@@ -4,8 +4,8 @@ title: "Optional Driver Configuration"
 
 ## Vagrant Driver
 
-Sometimes you'd like to add another NIC to your vm. You might have a `forwarded_port` you'd like
-to add also. The following snippet is how. You can also turn on the `auto_correct` if you think
+Sometimes you'd like to add another NIC to your vm, or bump up the memory. You might have a `forwarded_port` you'd like
+to add also. The following snippet is a couple suggestions how. You can even turn on the `auto_correct` if you think
 you'll need it.
 
 ~~~yaml
