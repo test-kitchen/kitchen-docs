@@ -8,7 +8,7 @@ next:
   url: "writing-recipe"
 ---
 
-In order to keep our worked example as simple as possible let's create a Chef cookbook to automate the installation and management of the [Git](http://git-scm.com/) distributed version control tool. It's true that there is already a very capable [Git cookbook](http://community.opscode.com/cookbooks/git) available on the [Opscode Community Site](http://community.opscode.com/cookbooks) (not to mention we just installed Git by hand in the **Installing** section) but this lets us focus on Test Kitchen usage and workflow rather than [building more awesome](http://www.youtube.com/watch?v=OU8ihx3nT6I).
+In order to keep our worked example as simple as possible let's create a Chef cookbook to automate the installation and management of the [Git](http://git-scm.com/) distributed version control tool. It's true that there is already a very capable [Git cookbook](http://community.opscode.com/cookbooks/git) available on the [Opscode Community Site](http://community.opscode.com/cookbooks) but this lets us focus on Test Kitchen usage and workflow rather than [building more awesome](http://www.youtube.com/watch?v=OU8ihx3nT6I).
 
 In the "real world" most Chef cookbook authors are likely to use a cookbook project generator but we're going to skip that step in the interests of transparency. A simple Chef cookbook has very few moving parts so let's start from there.
 
@@ -122,6 +122,14 @@ suites:
     run_list:
       - recipe[git::default]
     attributes:
+~~~
+
+Now, install Vagrant as follows:
+
+~~~
+$ cd
+$ wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4_x86_64.deb
+$ dpkg -i vagrant_1.7.4_x86_64.deb
 ~~~
 
 To see the results of our work, let's run the `kitchen list` subcommand:
