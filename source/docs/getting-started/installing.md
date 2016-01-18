@@ -17,7 +17,12 @@ To follow this guide there is some software that we will need in order for Test 
 * Vagrant - a great tool to help manage development virtual machines
 * VirtualBox - a virtualization tool that let's you run virtual machines locally
 
-I know, it sounds like a lot of work but fear not. It's not overly tricky to get going, and the folks over at the [#learnchef](https://learnchef.opscode.com/) website have a handy [Workstation Setup](https://learnchef.opscode.com/quickstart/workstation-setup/) that we can follow to get us started. Take a few minutes to get your software setup and if you run into any issues there should be some smart and capable people in the [#learnchef](http://webchat.freenode.net/?channel=learnchef) IRC chatroom to get you back on track.
+I know, it sounds like a lot of work but fear not. It's not overly tricky and the following pages describe installing these tools. So take a few minutes to get your software setup and if you run into any issues there should be some smart and capable people in the [#learnchef](http://webchat.freenode.net/?channel=learnchef) IRC chatroom to get you back on track.
+
+* [The ChefDK including Ruby](https://docs.chef.io/install_dk.html)
+* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [Vagrant](https://docs.vagrantup.com/v2/installation/)
+* [VirtualBox](https://www.virtualbox.org/manual/ch02.html)
 
 
 > **All done? Great! Open a terminal window and let's get started.**
