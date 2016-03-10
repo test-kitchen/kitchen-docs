@@ -12,50 +12,51 @@ Now that we have some code, let's let Test Kitchen run it for us on our Ubuntu 1
 
 ~~~
 $ kitchen converge default-ubuntu-1204
------> Starting Kitchen (v1.0.0)
+-----> Starting Kitchen (v1.3.1)
 -----> Converging <default-ubuntu-1204>...
        Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
        Removing non-cookbook files before transfer
------> Installing Chef Omnibus (true)
-       downloading https://www.opscode.com/chef/install.sh
+       Preparing solo.rb
+-----> Installing Chef Omnibus (install only if missing)
+       downloading https://www.chef.io/chef/install.sh
          to file /tmp/install.sh
        trying wget...
-Downloading Chef  for ubuntu...
-Installing Chef
-Selecting previously unselected package chef.
-(Reading database ... 53291 files and directories currently installed.)
-Unpacking chef (from .../tmp.GUasmrcD/chef__amd64.deb) ...
-Setting up chef (11.8.0-1.ubuntu.12.04) ...
-Thank you for installing Chef!
-       Transfering files to <default-ubuntu-1204>
-[2013-11-30T21:55:45+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-11-30T21:55:45+00:00] INFO: *** Chef 11.8.0 ***
-[2013-11-30T21:55:45+00:00] INFO: Chef-client pid: 1162
-[2013-11-30T21:55:46+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON
-[2013-11-30T21:55:46+00:00] INFO: Run List is [recipe[git::default]]
-[2013-11-30T21:55:46+00:00] INFO: Run List expands to [git::default]
-[2013-11-30T21:55:46+00:00] INFO: Starting Chef Run for default-ubuntu-1204
-[2013-11-30T21:55:46+00:00] INFO: Running start handlers
-[2013-11-30T21:55:46+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
-Converging 2 resources
-Recipe: git::default
-  * package[git] action install[2013-11-30T21:55:46+00:00] INFO: Processing package[git] action install (git::default line 1)
-
-    - install version 1:1.7.9.5-1 of package git
-
-  * log[Well, that was too easy] action write[2013-11-30T21:56:14+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)
-[2013-11-30T21:56:14+00:00] INFO: Well, that was too easy
-
-
-[2013-11-30T21:56:14+00:00] INFO: Chef Run complete in 28.139177847 seconds
-[2013-11-30T21:56:14+00:00] INFO: Running report handlers
-[2013-11-30T21:56:14+00:00] INFO: Report handlers complete
-Chef Client finished, 2 resources updated
-       Finished converging <default-ubuntu-1204> (1m3.91s).
------> Kitchen is finished. (1m4.22s)
+       Downloading Chef  for ubuntu...
+       downloading https://www.chef.io/chef/metadata?v=&prerelease=false&nightlies=false&p=ubuntu&pv=12.04&m=x86_64
+         to file /tmp/install.sh.4317/metadata.txt
+       
+       url	https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chef_12.2.0-1_amd64.deb
+       md5	5a900fd8f1dbcc97982f440f19fe530b
+       sha256	2f6e75e7b91558c6cbb26040c440cbfcaf2e2e989c29680cee5821667f31f294
+       downloaded metadata file looks valid...
+       downloading https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chef_12.2.0-1_amd64.deb
+         to file /tmp/install.sh.4317/chef_12.2.0-1_amd64.deb
+       trying wget...
+       Comparing checksum with sha256sum...
+       Installing Chef 
+       installing with dpkg...
+       Selecting previously unselected package chef.
+(Reading database ... 56035 files and directories currently installed.)
+       Unpacking chef (from .../chef_12.2.0-1_amd64.deb) ...
+       Setting up chef (12.2.0-1) ...
+       Thank you for installing Chef!
+       Transferring files to <default-ubuntu-1204>
+       Starting Chef Client, version 12.2.0
+       Compiling Cookbooks...
+       Converging 2 resources
+       Recipe: git::default
+         * apt_package[git] action install
+           - install version 1:1.7.9.5-1 of package git
+         * log[Well, that was too easy] action write
+         
+       
+       Running handlers:
+       Running handlers complete
+       Chef Client finished, 2/2 resources updated in 11.464101832 seconds
+       Finished converging <default-ubuntu-1204> (0m38.11s).
+-----> Kitchen is finished. (0m38.68s)
 ~~~
 
 To quote our Chef run, that **was** too easy. If you are a Chef user then part of the output above should look familiar to you. Here's what happened at a high level:
@@ -68,37 +69,28 @@ There's nothing to stop you from running this command again (or over-and-over fo
 
 ~~~
 $ kitchen converge default-ubuntu-1204
------> Starting Kitchen (v1.0.0)
+-----> Starting Kitchen (v1.3.1)
 -----> Converging <default-ubuntu-1204>...
        Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
        Removing non-cookbook files before transfer
-       Transfering files to <default-ubuntu-1204>
-[2013-11-30T21:57:00+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-11-30T21:57:00+00:00] INFO: *** Chef 11.8.0 ***
-[2013-11-30T21:57:00+00:00] INFO: Chef-client pid: 4142
-[2013-11-30T21:57:01+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON
-[2013-11-30T21:57:01+00:00] INFO: Run List is [recipe[git::default]]
-[2013-11-30T21:57:01+00:00] INFO: Run List expands to [git::default]
-[2013-11-30T21:57:01+00:00] INFO: Starting Chef Run for default-ubuntu-1204
-[2013-11-30T21:57:01+00:00] INFO: Running start handlers
-[2013-11-30T21:57:01+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
-Converging 2 resources
-Recipe: git::default
-  * package[git] action install[2013-11-30T21:57:01+00:00] INFO: Processing package[git] action install (git::default line 1)
- (up to date)
-  * log[Well, that was too easy] action write[2013-11-30T21:57:01+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)
-[2013-11-30T21:57:01+00:00] INFO: Well, that was too easy
-
-
-[2013-11-30T21:57:01+00:00] INFO: Chef Run complete in 0.069998015 seconds
-[2013-11-30T21:57:01+00:00] INFO: Running report handlers
-[2013-11-30T21:57:01+00:00] INFO: Report handlers complete
-Chef Client finished, 1 resources updated
-       Finished converging <default-ubuntu-1204> (0m1.67s).
------> Kitchen is finished. (0m1.99s)
+       Preparing solo.rb
+-----> Chef Omnibus installation detected (install only if missing)
+       Transferring files to <default-ubuntu-1204>
+       Starting Chef Client, version 12.2.0
+       Compiling Cookbooks...
+       Converging 2 resources
+       Recipe: git::default
+         * apt_package[git] action install (up to date)
+         * log[Well, that was too easy] action write
+         
+       
+       Running handlers:
+       Running handlers complete
+       Chef Client finished, 1/2 resources updated in 1.794280256 seconds
+       Finished converging <default-ubuntu-1204> (0m3.61s).
+-----> Kitchen is finished. (0m4.21s)
 ~~~
 
 That ran a **lot** faster didn't it? Here's what happened this time:
