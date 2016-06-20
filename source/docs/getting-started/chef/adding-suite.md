@@ -2,10 +2,10 @@
 title: Adding a Suite
 prev:
   text: "Adding a New Feature"
-  url: "adding-feature"
+  url: "chef/adding-feature"
 next:
   text: "Writing a Server Test"
-  url: "writing-server-test"
+  url: "chef/writing-server-test"
 ---
 
 We're going to call our new Test Kitchen Suite `"server"` by opening `.kitchen.yml` in your editor of choice so that it looks similar to:

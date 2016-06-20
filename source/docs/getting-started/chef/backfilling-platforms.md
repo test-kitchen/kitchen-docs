@@ -2,10 +2,10 @@
 title: Backfilling Platforms
 prev:
   text: "Adding a Dependency"
-  url: "adding-dependency"
+  url: "chef/adding-dependency"
 next:
   text: "Next Steps"
-  url: "next-steps"
+  url: "chef/next-steps"
 ---
 
 Let's see if our server recipe works on the older Ubuntu 10.04 platform. Fingers crossed, here we go:

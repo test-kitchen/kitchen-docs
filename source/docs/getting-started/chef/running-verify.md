@@ -2,10 +2,10 @@
 title: Running Kitchen Verify
 prev:
   text: "Writing a Test"
-  url: "writing-test"
+  url: "chef/writing-test"
 next:
   text: "Running Kitchen Test"
-  url: "running-test"
+  url: "chef/running-test"
 ---
 
 Now to put our test to the test. For this we'll use the **verify** subcommand:

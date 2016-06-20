@@ -4,6 +4,7 @@ gem "middleman"
 
 gem "slim"
 gem "pry"
+gem "rb-readline"
 
 gem "bootstrap-sass", github: "thomas-mcdonald/bootstrap-sass"
 

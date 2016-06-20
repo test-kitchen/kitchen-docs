@@ -2,10 +2,10 @@
 title: "Running Kitchen Converge"
 prev:
   text: "Writing a Recipe"
-  url: "writing-recipe"
+  url: "chef/writing-recipe"
 next:
   text: "Manually verifying"
-  url: "manually-verifying"
+  url: "chef/manually-verifying"
 ---
 
 Now that we have some code, let's let Test Kitchen run it for us on our Ubuntu 12.04 instance:

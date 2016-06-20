@@ -2,10 +2,10 @@
 title: Running Kitchen Test
 prev:
   text: "Running Kitchen Verify"
-  url: "running-verify"
+  url: "chef/running-verify"
 next:
   text: "Adding a Platform"
-  url: "adding-platform"
+  url: "chef/adding-platform"
 ---
 
 Now it's time to introduce to the **test** meta-action which helps you automate all the previous actions so far into one command. Recall that we currently have our instance in a "verified" state. With this in mind, let's run `kitchen test`:

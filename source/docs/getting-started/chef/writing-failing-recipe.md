@@ -2,10 +2,10 @@
 title: Writing a Failing Recipe
 prev:
   text: "Writing a Server Test"
-  url: "writing-server-test"
+  url: "chef/writing-server-test"
 next:
   text: "Adding a Dependency"
-  url: "adding-dependency"
+  url: "chef/adding-dependency"
 ---
 
 So far our cookbook has no dependencies on other cookbooks to get its job done which is awesome! But let's say we require dependant cookbooks. For our example we'll be relying on the [runit](http://community.opscode.com/cookbooks/runit) cookbook to manage our Git Daemon service.

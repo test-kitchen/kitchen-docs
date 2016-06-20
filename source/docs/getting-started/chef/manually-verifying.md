@@ -2,10 +2,10 @@
 title: "Manually Verifying"
 prev:
   text: "Running Kitchen Converge"
-  url: "running-converge"
+  url: "chef/running-converge"
 next:
   text: "Writing a Test"
-  url: "writing-test"
+  url: "chef/writing-test"
 ---
 
 If you're a skeptical person then you might be asking:

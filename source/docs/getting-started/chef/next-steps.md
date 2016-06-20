@@ -2,7 +2,7 @@
 title: Next Steps
 prev:
   text: "Backfilling Platforms"
-  url: "backfilling-platforms"
+  url: "chef/backfilling-platforms"
 next:
   text: "Frequently Asked Questions"
   url: "faq"

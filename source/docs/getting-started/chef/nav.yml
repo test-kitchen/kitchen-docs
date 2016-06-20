@@ -1,0 +1,67 @@
+---
+root_path: /docs/getting-started/
+guide:
+  -
+    url: ""
+    name: "Introduction"
+  -
+    url: "installing"
+    name: "Installing Test Kitchen"
+  -
+    url: "getting-help"
+    name: "Getting Help"
+  -
+    url: "chef/creating-cookbook"
+    name: "Creating a Cookbook"
+  -
+    url: "chef/writing-recipe"
+    name: "Writing a Recipe"
+  -
+    url: "chef/running-converge"
+    name: "Running Kitchen Converge"
+  -
+    url: "chef/manually-verifying"
+    name: "Manually Verifying"
+  -
+    url: "chef/writing-test"
+    name: "Writing a Test"
+  -
+    url: "chef/running-verify"
+    name: "Running Kitchen Verify"
+  -
+    url: "chef/running-test"
+    name: "Running Kitchen Test"
+  -
+    url: "chef/adding-platform"
+    name: "Adding a Platform"
+  -
+    url: "chef/dynamic-configuration"
+    name: "Dynamic Configuration"
+  -
+    url: "chef/fixing-converge"
+    name: "Fixing Converge"
+  -
+    url: "chef/adding-feature"
+    name: "Adding a New Feature"
+  -
+    url: "chef/adding-suite"
+    name: "Adding a Suite"
+  -
+    url: "chef/writing-server-test"
+    name: "Writing a Server Test"
+  -
+    url: "chef/writing-failing-recipe"
+    name: "Writing a Failing Recipe"
+  -
+    url: "chef/adding-dependency"
+    name: "Adding a Dependency"
+  -
+    url: "chef/backfilling-platforms"
+    name: "Backfilling Platforms"
+  -
+    url: "chef/next-steps"
+    name: "Next Steps"
+  -
+    url: "faq"
+    name: "FAQ"
+---

@@ -2,10 +2,10 @@
 title: Writing a Server Test
 prev:
   text: "Add a Suite"
-  url: "adding-suite"
+  url: "chef/adding-suite"
 next:
   text: "Writing a Failing Recipe"
-  url: "writing-failing-recipe"
+  url: "chef/writing-failing-recipe"
 ---
 
 Now to write a test or two. Previously we've seen the bats testing framework in action but this isn't always a viable option. For example if you needed to verify that a package was installed and you needed to test that on Ubuntu and CentOS platforms, then what would you do? You need to bust out some platform detection in order to run a Debian or RPM-based command. Feels like Chef would help us here since it's good at that sort of thing. On the other hand there are advantages to treating our Chef run as a black box - a configuration-management implementation detail, if you will. So what to do?

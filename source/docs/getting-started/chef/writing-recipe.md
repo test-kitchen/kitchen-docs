@@ -2,10 +2,10 @@
 title: "Writing a Recipe"
 prev:
   text: "Creating a Cookbook"
-  url: "creating-cookbook"
+  url: "chef/creating-cookbook"
 next:
   text: "Running Kitchen Converge"
-  url: "running-converge"
+  url: "chef/running-converge"
 ---
 
 Here we go, time to automate our Git installation! Open `recipes/default.rb` in your editor of choice and write the following:
