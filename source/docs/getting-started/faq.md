@@ -2,7 +2,7 @@
 title: "Frequently Asked Questions"
 prev:
   text: "Next Steps"
-  url: "next-steps"
+  url: "chef/next-steps"
 ---
 
 ### The defaults are way too small or missing something, how do I change the default Vagrant machine?

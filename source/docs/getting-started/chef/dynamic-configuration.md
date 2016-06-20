@@ -2,10 +2,10 @@
 title: Dynamic Configuration
 prev:
   text: "Adding a Platform"
-  url: "adding-platform"
+  url: "chef/adding-platform"
 next:
   text: "Fixing Converge"
-  url: "fixing-converge"
+  url: "chef/fixing-converge"
 ---
 
 There are a few basic ways of dynamically configuring Test Kitchen:

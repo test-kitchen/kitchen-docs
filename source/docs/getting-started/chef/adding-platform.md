@@ -2,10 +2,10 @@
 title: Adding a Platform
 prev:
   text: "Running Kitchen Test"
-  url: "running-test"
+  url: "chef/running-test"
 next:
   text: "Dynamic Configuration"
-  url: "dynamic-configuration"
+  url: "chef/dynamic-configuration"
 ---
 
 Now that we are masters of the Ubuntu platform, let's add support for CentOS to our cookbook. This shouldn't be too bad. Open `.kitchen.yml` in your editor and the `centos-6.4` line to your platforms list so that it resembles:

@@ -34,6 +34,24 @@ end
 
 ###
 # Helpers
+helpers do
+
+  def local_nav_path(path, drop)
+    path.split('/').reverse.drop(drop).reverse.push("nav.yml").join("/")
+  end
+
+  def lookup_local_nav(path)
+    drop = 1
+    loop do
+      nav_file = local_nav_path(path, drop)
+      local_nav_resource = sitemap.find_resource_by_path(nav_file)
+      return local_nav_resource unless local_nav_resource.nil?
+      drop += 1
+      break if drop >= 4
+    end
+  end
+end
+
 ###
 
 # Automatic image dimensions on image_tag helper

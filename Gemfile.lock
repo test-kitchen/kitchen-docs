@@ -92,6 +92,7 @@ GEM
       ffi (>= 0.5.0)
     rb-kqueue (0.2.0)
       ffi (>= 0.5.0)
+    rb-readline (0.5.3)
     redcarpet (3.0.0)
     rouge (1.2.0)
     sass (3.2.12)
@@ -125,6 +126,10 @@ DEPENDENCIES
   middleman-livereload
   middleman-syntax!
   pry
+  rb-readline
   redcarpet
   slim
   wdm (~> 0.1.0)
+
+BUNDLED WITH
+   1.12.5

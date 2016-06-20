@@ -2,10 +2,10 @@
 title: Adding a Dependency
 prev:
   text: "Writing a Failing Recipe"
-  url: "writing-failing-recipe"
+  url: "chef/writing-failing-recipe"
 next:
   text: "Backfilling Platforms"
-  url: "backfilling-platforms"
+  url: "chef/backfilling-platforms"
 ---
 
 To add a dependency to our cookbook we edit the `metadata.rb` file and the runit cookbook with a `depends` statement:

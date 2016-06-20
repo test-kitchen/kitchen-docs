@@ -2,10 +2,10 @@
 title: Adding a New Feature
 prev:
   text: "Fixing Converge"
-  url: "fixing-converge"
+  url: "chef/fixing-converge"
 next:
   text: "Adding a Suite"
-  url: "adding-suite"
+  url: "chef/adding-suite"
 ---
 
 Now we're going to add limited support to our Git cookbook for a read-only Git daemon. This lets us see two new concepts in action: working with multiple suites and managing cookbook dependencies.
