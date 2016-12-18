@@ -17,12 +17,15 @@ Let's verify this right now.
 Test Kitchen has a **login** subcommand for just these kinds of situations:
 
 ~~~
-$ kitchen login default-ubuntu-1204
-Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.5.0-23-generic x86_64)
+$ kitchen login default-ubuntu-1404
+Welcome to Ubuntu 14.04.5 LTS (GNU/Linux 3.13.0-103-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
-Last login: Sat Nov 30 21:56:59 2013 from 10.0.2.2
-vagrant@default-ubuntu-1204:~$
+
+...
+
+Last login: Sun Dec 18 10:47:20 2016 from 10.0.2.2
+vagrant@default-ubuntu-1404:~$
 ~~~
 
 As you can see by the prompt above we are now in the `default-ubuntu-1204` instance. We'll denote the prompt in an instance with `# ` for clarity. Now to check if Git is installed:
@@ -31,7 +34,7 @@ As you can see by the prompt above we are now in the `default-ubuntu-1204` insta
 # which git
 /usr/bin/git
 # git --version
-git version 1.7.9.5
+git version 1.9.1
 ~~~
 
 Rockin. Now we can exit out back to our workstation:

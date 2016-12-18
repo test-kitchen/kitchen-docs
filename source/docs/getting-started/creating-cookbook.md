@@ -55,13 +55,11 @@ Now we'll add Test Kitchen to our project by using the **init** subcommand:
 ~~~
 $ kitchen init --driver=kitchen-vagrant
       create  .kitchen.yml
-      create  test/integration/default
+      create  chefignore
       create  .gitignore
       append  .gitignore
       append  .gitignore
-         run  gem install kitchen-vagrant from "."
-Fetching: kitchen-vagrant-0.12.0.gem (100%)
-Successfully installed kitchen-vagrant-0.12.0
+Successfully installed kitchen-vagrant-0.21.1
 1 gem installed
 ~~~
 
@@ -87,8 +85,8 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu-12.04
-  - name: centos-6.4
+  - name: ubuntu-14.04
+  - name: centos-7.2
 
 suites:
   - name: default
@@ -115,7 +113,7 @@ provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu-12.04
+  - name: ubuntu-14.04
 
 suites:
   - name: default
@@ -128,50 +126,66 @@ To see the results of our work, let's run the `kitchen list` subcommand:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  ChefSolo     <Not Created>
+Instance             Driver   Provisioner  Verifier  Transport  Last Action    Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
 ~~~
 
-So what's this `default-ubuntu-1204` thing and what's an "Instance"? A Test Kitchen **Instance** is a pairwise combination of a **Suite** and a **Platform** as laid out in your `.kitchen.yml` file. Test Kitchen has auto-named your only instance by combining the **Suite** name (`"default"`) and the **Platform** name (`"ubuntu-12.04"`) into a form that is safe for DNS and hostname records, namely `"default-ubuntu-1204"`.
+So what's this `default-ubuntu-1404` thing and what's an "Instance"? A Test Kitchen **Instance** is a pairwise combination of a **Suite** and a **Platform** as laid out in your `.kitchen.yml` file. Test Kitchen has auto-named your only instance by combining the **Suite** name (`"default"`) and the **Platform** name (`"ubuntu-14.04"`) into a form that is safe for DNS and hostname records, namely `"default-ubuntu-1404"`.
 
-Okay, let's spin this **Instance** up to see what happens. Test Kitchen calls this the **Create Action**. We're going to be painfully explicit and ask Test Kitchen to only create the `default-ubuntu-1204` instance:
+Okay, let's spin this **Instance** up to see what happens. Test Kitchen calls this the **Create Action**. We're going to be painfully explicit and ask Test Kitchen to only create the `default-ubuntu-1404` instance:
 
 ~~~
-$ kitchen create default-ubuntu-1204
------> Starting Kitchen (v1.0.0)
------> Creating <default-ubuntu-1204>...
+$ kitchen create default-ubuntu-1404
+-----> Starting Kitchen (v1.14.2)
+-----> Creating <default-ubuntu-1404>...
        Bringing machine 'default' up with 'virtualbox' provider...
-       [default] Importing base box 'opscode-ubuntu-12.04'...
-       [default] Matching MAC address for NAT networking...
-       [default] Setting the name of the VM...
-       [default] Clearing any previously set forwarded ports...
-       [default] Creating shared folders metadata...
-       [default] Clearing any previously set network interfaces...
-       [default] Preparing network interfaces based on configuration...
-       [default] Forwarding ports...
-       [default] -- 22 => 2222 (adapter 1)
-       [default] Running 'pre-boot' VM customizations...
-       [default] Booting VM...
-[default] Waiting for machine to boot. This may take a few minutes...       [default] Machine booted and ready!
-       [default] Setting hostname...
-       [default] Mounting shared folders...
-       Vagrant instance <default-ubuntu-1204> created.
-       Finished creating <default-ubuntu-1204> (0m53.30s).
------> Kitchen is finished. (0m53.59s)
+       ==> default: Importing base box 'bento/ubuntu-14.04'...
+==> default: Matching MAC address for NAT networking...
+       ==> default: Checking if box 'bento/ubuntu-14.04' is up to date...
+       ==> default: Setting the name of the VM: kitchen-git-cookbook-default-ubuntu-1404_default_1482056833777_92056
+       ==> default: Fixed port collision for 22 => 2222. Now on port 2200.
+       ==> default: Clearing any previously set network interfaces...
+       ==> default: Preparing network interfaces based on configuration...
+           default: Adapter 1: nat
+       ==> default: Forwarding ports...
+           default: 22 (guest) => 2200 (host) (adapter 1)
+       ==> default: Running 'pre-boot' VM customizations...
+       ==> default: Booting VM...
+       ==> default: Waiting for machine to boot. This may take a few minutes...
+           default: SSH address: 127.0.0.1:2200
+           default: SSH username: vagrant
+           default: SSH auth method: private key
+           default:
+           default: Vagrant insecure key detected. Vagrant will automatically replace
+           default: this with a newly generated keypair for better security.
+           default:
+           default: Inserting generated public key within guest...
+           default: Removing insecure key from the guest if it's present...
+           default: Key inserted! Disconnecting and reconnecting using new SSH key...
+       ==> default: Machine booted and ready!
+       ==> default: Checking for guest additions in VM...
+       ==> default: Setting hostname...
+       ==> default: Mounting shared folders...
+           default: /tmp/omnibus/cache => /Users/dom/.kitchen/cache
+       ==> default: Machine not provisioned because `--no-provision` is specified.
+       [SSH] Established
+       Vagrant instance <default-ubuntu-1404> created.
+       Finished creating <default-ubuntu-1404> (0m33.04s).
+-----> Kitchen is finished. (0m33.18s)
 ~~~
 
 If you are a Vagrant user then the line containing `vagrant up --no-provision` will look familiar. Let's check the status of our instance now:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  ChefSolo     Created
+Instance             Driver   Provisioner  Verifier  Transport  Last Action  Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        Created      <None>
 ~~~
 
 Let's commit our glorious work:
 
 ~~~
-$ git add .gitignore .kitchen.yml
+$ git add .gitignore .kitchen.yml chefignore
 $ git commit -m "Add Test Kitchen to the project."
 [master 431068c] Add Test Kitchen to the project.
  2 files changed, 17 insertions(+)

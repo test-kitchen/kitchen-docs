@@ -44,86 +44,129 @@ The beginning stanzas are RSpec and Serverspec setup and the meat of our testing
 As our primary target platform was Ubuntu 12.04, we'll target this one first for development. Now, in Test-Driven style we'll run `kitchen verify` to watch our tests fail spectacularly:
 
 ~~~
-$ kitchen verify server-ubuntu-1204
------> Starting Kitchen (v1.0.0)
------> Creating <server-ubuntu-1204>...
+$ kitchen verify server-ubuntu-1404
+-----> Starting Kitchen (v1.14.2)
+-----> Creating <server-ubuntu-1404>...
        Bringing machine 'default' up with 'virtualbox' provider...
-       [default] Importing base box 'opscode-ubuntu-12.04'...
-       [default] Matching MAC address for NAT networking...
-       [default] Setting the name of the VM...
-       [default] Clearing any previously set forwarded ports...
-       [default] Creating shared folders metadata...
-       [default] Clearing any previously set network interfaces...
-       [default] Preparing network interfaces based on configuration...
-       [default] Forwarding ports...
-       [default] -- 22 => 2222 (adapter 1)
-       [default] Running 'pre-boot' VM customizations...
-       [default] Booting VM...
-       [default] Waiting for machine to boot. This may take a few minutes...
-       [default] Machine booted and ready!
-       [default] Setting hostname...
-       [default] Mounting shared folders...
-       Vagrant instance <server-ubuntu-1204> created.
-       Finished creating <server-ubuntu-1204> (0m35.69s).
------> Converging <server-ubuntu-1204>...
+       ==> default: Importing base box 'bento/ubuntu-14.04'...
+==> default: Matching MAC address for NAT networking...
+       ==> default: Checking if box 'bento/ubuntu-14.04' is up to date...
+       ==> default: Setting the name of the VM: kitchen-git-cookbook-server-ubuntu-1404_default_1482074513896_56646
+       ==> default: Clearing any previously set network interfaces...
+       ==> default: Preparing network interfaces based on configuration...
+           default: Adapter 1: nat
+       ==> default: Forwarding ports...
+           default: 22 (guest) => 2222 (host) (adapter 1)
+       ==> default: Running 'pre-boot' VM customizations...
+       ==> default: Booting VM...
+       ==> default: Waiting for machine to boot. This may take a few minutes...
+           default: SSH address: 127.0.0.1:2222
+           default: SSH username: vagrant
+           default: SSH auth method: private key
+           default:
+           default: Vagrant insecure key detected. Vagrant will automatically replace
+           default: this with a newly generated keypair for better security.
+           default:
+           default: Inserting generated public key within guest...
+           default: Removing insecure key from the guest if it's present...
+           default: Key inserted! Disconnecting and reconnecting using new SSH key...
+       ==> default: Machine booted and ready!
+       ==> default: Checking for guest additions in VM...
+       ==> default: Setting hostname...
+       ==> default: Mounting shared folders...
+           default: /tmp/omnibus/cache => /Users/dom/.kitchen/cache
+       ==> default: Machine not provisioned because `--no-provision` is specified.
+       [SSH] Established
+       Vagrant instance <server-ubuntu-1404> created.
+       Finished creating <server-ubuntu-1404> (0m33.15s).
+-----> Converging <server-ubuntu-1404>...
        Preparing files for transfer
-       Preparing current project directory as a cookbook
+       Preparing dna.json
+       Resolving cookbook dependencies with Berkshelf 5.3.0...
        Removing non-cookbook files before transfer
------> Installing Chef Omnibus (true)
-       downloading https://www.opscode.com/chef/install.sh
-         to file /tmp/install.sh
+       Preparing solo.rb
+-----> Installing Chef Omnibus (install only if missing)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying wget...
+       Download complete.
+       ubuntu 14.04 x86_64
+       Getting information for chef stable  for ubuntu...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=&p=ubuntu&pv=14.04&m=x86_64
+         to file /tmp/install.sh.1483/metadata.txt
        trying wget...
+       sha1	10b9026d57005aaf31289aec650931a02b5347d3
+       sha256	de5991b073fb22aa295fd0142f5e4ed3ca7da6ffe2c3fdcb01da29e4cdd0bd04
+       url	https://packages.chef.io/files/stable/chef/12.17.44/ubuntu/14.04/chef_12.17.44-1_amd64.deb
+       version	12.17.44
+       downloaded metadata file looks valid...
+       /tmp/omnibus/cache/chef_12.17.44-1_amd64.deb already exists, verifiying checksum...
+       Comparing checksum with sha256sum...
+       checksum compare succeeded, using existing file!
 
-Downloading Chef  for ubuntu...
-Installing Chef
-Selecting previously unselected package chef.
-(Reading database ... 53291 files and directories currently installed.)
-Unpacking chef (from .../tmp.H1RNfFn1/chef__amd64.deb) ...
-Setting up chef (11.8.0-1.ubuntu.12.04) ...
-Thank you for installing Chef!
-       Transfering files to <server-ubuntu-1204>
-[2013-12-01T18:32:58+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-12-01T18:32:58+00:00] INFO: *** Chef 11.8.0 ***
-[2013-12-01T18:32:58+00:00] INFO: Chef-client pid: 1147
-[2013-12-01T18:32:58+00:00] INFO: Setting the run_list to ["recipe[git::server]"] from JSON
-[2013-12-01T18:32:58+00:00] INFO: Run List is [recipe[git::server]]
-[2013-12-01T18:32:58+00:00] INFO: Run List expands to [git::server]
-[2013-12-01T18:32:58+00:00] INFO: Starting Chef Run for server-ubuntu-1204
-[2013-12-01T18:32:58+00:00] INFO: Running start handlers
-[2013-12-01T18:32:58+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 
-================================================================================
-Recipe Compile Error
-================================================================================
+       You are installing an omnibus package without a version pin.  If you are installing
+       on production servers via an automated process this is DANGEROUS and you will
+       be upgraded without warning on new releases, even to new major releases.
+       Letting the version float is only appropriate in desktop, test, development or
+       CI/CD environments.
+
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+       Installing chef
+       installing with dpkg...
+       Selecting previously unselected package chef.
+(Reading database ... 35284 files and directories currently installed.)
+       Preparing to unpack .../chef_12.17.44-1_amd64.deb ...
+       Unpacking chef (12.17.44-1) ...
+       Setting up chef (12.17.44-1) ...
+       Thank you for installing Chef!
+       Transferring files to <server-ubuntu-1404>
+       Starting Chef Client, version 12.17.44
+       Creating a new client identity for server-ubuntu-1404 using the validator key.
+       resolving cookbooks for run list: ["git::server"]
+       Synchronizing Cookbooks:
+         - git (0.1.0)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+
+       ================================================================================
+       Recipe Compile Error
+       ================================================================================
+
+       Chef::Exceptions::RecipeNotFound
+       --------------------------------
+       could not find recipe server for cookbook git
+
+       Platform:
+       ---------
+       x86_64-linux
 
 
-Chef::Exceptions::RecipeNotFound
---------------------------------
-could not find recipe server for cookbook git
-
-
-[2013-12-01T18:32:58+00:00] ERROR: Running exception handlers
-[2013-12-01T18:32:58+00:00] ERROR: Exception handlers complete
-[2013-12-01T18:32:58+00:00] FATAL: Stacktrace dumped to /tmp/kitchen/cache/chef-stacktrace.out
-Chef Client failed. 0 resources updated
-[2013-12-01T18:32:58+00:00] ERROR: could not find recipe server for cookbook git
-[2013-12-01T18:32:58+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)
->>>>>> Converge failed on instance <server-ubuntu-1204>.
->>>>>> Please see .kitchen/logs/server-ubuntu-1204.log for more details
+       Running handlers:
+       [2016-12-18T15:22:24+00:00] ERROR: Running exception handlers
+       Running handlers complete
+       [2016-12-18T15:22:24+00:00] ERROR: Exception handlers complete
+       Chef Client failed. 0 resources updated in 01 seconds
+       [2016-12-18T15:22:24+00:00] FATAL: Stacktrace dumped to /tmp/kitchen/cache/chef-stacktrace.out
+       [2016-12-18T15:22:24+00:00] FATAL: Please provide the contents of the stacktrace.out file if you file a bug report
+       [2016-12-18T15:22:24+00:00] ERROR: could not find recipe server for cookbook git
+       [2016-12-18T15:22:24+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)
 >>>>>> ------Exception-------
 >>>>>> Class: Kitchen::ActionFailed
->>>>>> Message: SSH exited (1) for command: [sudo -E chef-solo --config /tmp/kitchen/solo.rb --json-attributes /tmp/kitchen/dna.json  --log_level info]
+>>>>>> Message: 1 actions failed.
+>>>>>>     Converge failed on instance <server-ubuntu-1404>.  Please see .kitchen/logs/server-ubuntu-1404.log for more details
 >>>>>> ----------------------
+>>>>>> Please see .kitchen/logs/kitchen.log for more details
+>>>>>> Also try running `kitchen diagnose --all` for configuration
 ~~~
 
 One quick check of `kitchen list` tells us that our instance was created but not successfully converged:
 
 ~~~
-$ kitchen list server-ubuntu-1204
-Instance            Driver   Provisioner  Last Action
-server-ubuntu-1204  Vagrant  ChefSolo     Created
+$ kitchen list server-ubuntu-1404
+Instance            Driver   Provisioner  Verifier  Transport  Last Action  Last Error
+server-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        Created      Kitchen::ActionFailed
 ~~~
 
 Yes, you can specify one or more instances with the same Ruby regular expression globbing as any other `kitchen` subcommands.

@@ -11,117 +11,147 @@ next:
 Now it's time to introduce to the **test** meta-action which helps you automate all the previous actions so far into one command. Recall that we currently have our instance in a "verified" state. With this in mind, let's run `kitchen test`:
 
 ~~~
-$ kitchen test default-ubuntu-1204
------> Starting Kitchen (v1.0.0)
------> Cleaning up any prior instances of <default-ubuntu-1204>
------> Destroying <default-ubuntu-1204>...
-       [default] Forcing shutdown of VM...
-       [default] Destroying VM and associated drives...
-       Vagrant instance <default-ubuntu-1204> destroyed.
-       Finished destroying <default-ubuntu-1204> (0m3.06s).
------> Testing <default-ubuntu-1204>
------> Creating <default-ubuntu-1204>...
+$ kitchen test default-ubuntu-1404
+-----> Starting Kitchen (v1.14.2)
+-----> Cleaning up any prior instances of <default-ubuntu-1404>
+-----> Destroying <default-ubuntu-1404>...
+       ==> default: Forcing shutdown of VM...
+       ==> default: Destroying VM and associated drives...
+       Vagrant instance <default-ubuntu-1404> destroyed.
+       Finished destroying <default-ubuntu-1404> (0m4.71s).
+-----> Testing <default-ubuntu-1404>
+-----> Creating <default-ubuntu-1404>...
        Bringing machine 'default' up with 'virtualbox' provider...
-       [default] Importing base box 'opscode-ubuntu-12.04'...
-       [default] Matching MAC address for NAT networking...
-       [default] Setting the name of the VM...
-       [default] Clearing any previously set forwarded ports...
-       [default] Creating shared folders metadata...
-       [default] Clearing any previously set network interfaces...
-       [default] Preparing network interfaces based on configuration...
-       [default] Forwarding ports...
-       [default] -- 22 => 2222 (adapter 1)
-       [default] Running 'pre-boot' VM customizations...
-       [default] Booting VM...
-       [default] Waiting for machine to boot. This may take a few minutes...
-[default] Machine booted and ready!       [default] Setting hostname...
-       [default] Mounting shared folders...
-       Vagrant instance <default-ubuntu-1204> created.
-       Finished creating <default-ubuntu-1204> (0m46.22s).
------> Converging <default-ubuntu-1204>...
+       ==> default: Importing base box 'bento/ubuntu-14.04'...
+==> default: Matching MAC address for NAT networking...
+       ==> default: Checking if box 'bento/ubuntu-14.04' is up to date...
+       ==> default: Setting the name of the VM: kitchen-git-cookbook-default-ubuntu-1404_default_1482059149281_96132
+       ==> default: Clearing any previously set network interfaces...
+       ==> default: Preparing network interfaces based on configuration...
+           default: Adapter 1: nat
+       ==> default: Forwarding ports...
+           default: 22 (guest) => 2222 (host) (adapter 1)
+       ==> default: Running 'pre-boot' VM customizations...
+       ==> default: Booting VM...
+       ==> default: Waiting for machine to boot. This may take a few minutes...
+           default: SSH address: 127.0.0.1:2222
+           default: SSH username: vagrant
+           default: SSH auth method: private key
+           default:
+           default: Vagrant insecure key detected. Vagrant will automatically replace
+           default: this with a newly generated keypair for better security.
+           default:
+           default: Inserting generated public key within guest...
+           default: Removing insecure key from the guest if it's present...
+           default: Key inserted! Disconnecting and reconnecting using new SSH key...
+       ==> default: Machine booted and ready!
+       ==> default: Checking for guest additions in VM...
+       ==> default: Setting hostname...
+       ==> default: Mounting shared folders...
+           default: /tmp/omnibus/cache => /Users/dom/.kitchen/cache
+       ==> default: Machine not provisioned because `--no-provision` is specified.
+       [SSH] Established
+       Vagrant instance <default-ubuntu-1404> created.
+       Finished creating <default-ubuntu-1404> (0m33.01s).
+-----> Converging <default-ubuntu-1404>...
        Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
        Removing non-cookbook files before transfer
------> Installing Chef Omnibus (true)
-       downloading https://www.opscode.com/chef/install.sh
-         to file /tmp/install.sh
+       Preparing solo.rb
+-----> Installing Chef Omnibus (install only if missing)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying wget...
+       Download complete.
+       ubuntu 14.04 x86_64
+       Getting information for chef stable  for ubuntu...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=&p=ubuntu&pv=14.04&m=x86_64
+         to file /tmp/install.sh.1482/metadata.txt
        trying wget...
-Downloading Chef  for ubuntu...
-Installing Chef
-Selecting previously unselected package chef.
-(Reading database ... 53291 files and directories currently installed.)
-Unpacking chef (from .../tmp.CLdJIw55/chef__amd64.deb) ...
-Setting up chef (11.8.0-1.ubuntu.12.04) ...
-Thank you for installing Chef!
-       Transfering files to <default-ubuntu-1204>
-[2013-11-30T22:10:59+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-11-30T22:10:59+00:00] INFO: *** Chef 11.8.0 ***
-[2013-11-30T22:10:59+00:00] INFO: Chef-client pid: 1192
-[2013-11-30T22:10:59+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON
-[2013-11-30T22:10:59+00:00] INFO: Run List is [recipe[git::default]]
-[2013-11-30T22:10:59+00:00] INFO: Run List expands to [git::default]
-[2013-11-30T22:10:59+00:00] INFO: Starting Chef Run for default-ubuntu-1204
-[2013-11-30T22:10:59+00:00] INFO: Running start handlers
-[2013-11-30T22:10:59+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
-Converging 2 resources
-Recipe: git::default
-  * package[git] action install[2013-11-30T22:10:59+00:00] INFO: Processing package[git] action install (git::default line 1)
+       sha1	10b9026d57005aaf31289aec650931a02b5347d3
+       sha256	de5991b073fb22aa295fd0142f5e4ed3ca7da6ffe2c3fdcb01da29e4cdd0bd04
+       url	https://packages.chef.io/files/stable/chef/12.17.44/ubuntu/14.04/chef_12.17.44-1_amd64.deb
+       version	12.17.44
+       downloaded metadata file looks valid...
+       /tmp/omnibus/cache/chef_12.17.44-1_amd64.deb already exists, verifiying checksum...
+       Comparing checksum with sha256sum...
+       checksum compare succeeded, using existing file!
 
-    - install version 1:1.7.9.5-1 of package git
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 
-  * log[Well, that was too easy] action write[2013-11-30T22:11:24+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)
-[2013-11-30T22:11:24+00:00] INFO: Well, that was too easy
+       You are installing an omnibus package without a version pin.  If you are installing
+       on production servers via an automated process this is DANGEROUS and you will
+       be upgraded without warning on new releases, even to new major releases.
+       Letting the version float is only appropriate in desktop, test, development or
+       CI/CD environments.
+
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+       Installing chef
+       installing with dpkg...
+       Selecting previously unselected package chef.
+(Reading database ... 35284 files and directories currently installed.)
+       Preparing to unpack .../chef_12.17.44-1_amd64.deb ...
+       Unpacking chef (12.17.44-1) ...
+       Setting up chef (12.17.44-1) ...
+       Thank you for installing Chef!
+       Transferring files to <default-ubuntu-1404>
+       Starting Chef Client, version 12.17.44
+       Creating a new client identity for default-ubuntu-1404 using the validator key.
+       resolving cookbooks for run list: ["git::default"]
+       Synchronizing Cookbooks:
+         - git (0.1.0)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       Converging 2 resources
+       Recipe: git::default
+         * apt_package[git] action install
+           - install version 1:1.9.1-1ubuntu0.3 of package git
+         * log[Well, that was too easy] action write
 
 
-[2013-11-30T22:11:24+00:00] INFO: Chef Run complete in 24.365178204 seconds
-[2013-11-30T22:11:24+00:00] INFO: Running report handlers
-[2013-11-30T22:11:24+00:00] INFO: Report handlers complete
-Chef Client finished, 2 resources updated
-       Finished converging <default-ubuntu-1204> (0m45.17s).
------> Setting up <default-ubuntu-1204>...
-Fetching: thor-0.18.1.gem (100%)
-Fetching: busser-0.6.0.gem (100%)
-Successfully installed thor-0.18.1
-Successfully installed busser-0.6.0
-2 gems installed
------> Setting up Busser
-       Creating BUSSER_ROOT in /tmp/busser
-       Creating busser binstub
-       Plugin bats installed (version 0.1.0)
+       Running handlers:
+       Running handlers complete
+       Chef Client finished, 2/2 resources updated in 14 seconds
+       Finished converging <default-ubuntu-1404> (0m22.94s).
+-----> Setting up <default-ubuntu-1404>...
+       Finished setting up <default-ubuntu-1404> (0m0.00s).
+-----> Verifying <default-ubuntu-1404>...
+       Preparing files for transfer
+-----> Installing Busser (busser)
+Fetching: thor-0.19.0.gem (100%)
+       Successfully installed thor-0.19.0
+Fetching: busser-0.7.1.gem (100%)
+       Successfully installed busser-0.7.1
+       2 gems installed
+       Installing Busser plugins: busser-bats
+       Plugin bats installed (version 0.3.0)
 -----> Running postinstall for bats plugin
-      create  /tmp/bats20131130-4164-uxjzr4/bats
-      create  /tmp/bats20131130-4164-uxjzr4/bats.tar.gz
-Installed Bats to /tmp/busser/vendor/bats/bin/bats
-      remove  /tmp/bats20131130-4164-uxjzr4
-       Finished setting up <default-ubuntu-1204> (0m4.89s).
------> Verifying <default-ubuntu-1204>...
-       Suite path directory /tmp/busser/suites does not exist, skipping.
-Uploading /tmp/busser/suites/bats/git_installed.bats (mode=0644)
+       Installed Bats to /tmp/verifier/vendor/bats/bin/bats
+       Suite path directory /tmp/verifier/suites does not exist, skipping.
+       Transferring files to <default-ubuntu-1404>
 -----> Running bats test suite
  ✓ git binary is found in PATH
 
        1 test, 0 failures
-
-       Finished verifying <default-ubuntu-1204> (0m0.98s).
------> Destroying <default-ubuntu-1204>...
-       [default] Forcing shutdown of VM...
-       [default] Destroying VM and associated drives...
-       Vagrant instance <default-ubuntu-1204> destroyed.
-       Finished destroying <default-ubuntu-1204> (0m3.48s).
-       Finished testing <default-ubuntu-1204> (1m43.82s).
------> Kitchen is finished. (1m44.11s)
+       Finished verifying <default-ubuntu-1404> (0m5.49s).
+-----> Destroying <default-ubuntu-1404>...
+       ==> default: Forcing shutdown of VM...
+       ==> default: Destroying VM and associated drives...
+       Vagrant instance <default-ubuntu-1404> destroyed.
+       Finished destroying <default-ubuntu-1404> (0m4.15s).
+       Finished testing <default-ubuntu-1404> (1m10.31s).
+-----> Kitchen is finished. (1m10.44s)
 ~~~
 
 There's only one remaining action left that needs a mention: the **Destroy Action** which... destroys the instance. With this in mind, here's what Test Kitchen is doing in the **Test Action**:
 
-1. Destroys the instance if it exists (`Cleaning up any prior instances of <default-ubuntu-1204>`)
-2. Creates the instance (`Creating <default-ubuntu-1204>`)
-3. Converges the instance (`Converging <default-ubuntu-1204>`)
-4. Sets up Busser and runner plugins on the instance (`Setting up <default-ubuntu-1204>`)
-5. Verifies the instance by running Busser tests (`Verifying <default-ubuntu-1204>`)
-6. Destroys the instance (`Destroying <default-ubuntu-1204>`)
+1. Destroys the instance if it exists (`Cleaning up any prior instances of <default-ubuntu-1404>`)
+2. Creates the instance (`Creating <default-ubuntu-1404>`)
+3. Converges the instance (`Converging <default-ubuntu-1404>`)
+4. Sets up Busser and runner plugins on the instance (`Setting up <default-ubuntu-1404>`)
+5. Verifies the instance by running Busser tests (`Verifying <default-ubuntu-1404>`)
+6. Destroys the instance (`Destroying <default-ubuntu-1404>`)
 
 A few details with regards to test:
 
@@ -133,8 +163,8 @@ Finally, let's check the status of the instance:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  ChefSolo     <Not Created>
+Instance             Driver   Provisioner  Verifier  Transport  Last Action    Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
 ~~~
 
 Back to square one.

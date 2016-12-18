@@ -34,68 +34,76 @@ Reasonably straight forward code. Here's what is going on:
 Now to see the fruits of our effort:
 
 ~~~
-$ kitchen verify server-ubuntu-1204
------> Starting Kitchen (v1.0.0)
------> Converging <server-ubuntu-1204>...
+$ kitchen verify server-ubuntu-1404
+-----> Starting Kitchen (v1.14.2)
+-----> Converging <server-ubuntu-1404>...
        Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
        Removing non-cookbook files before transfer
-       Transfering files to <server-ubuntu-1204>
-[2013-12-01T23:59:22+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-12-01T23:59:22+00:00] INFO: *** Chef 11.8.0 ***
-[2013-12-01T23:59:22+00:00] INFO: Chef-client pid: 1307
-[2013-12-01T23:59:22+00:00] INFO: Setting the run_list to ["recipe[git::server]"] from JSON
-[2013-12-01T23:59:22+00:00] INFO: Run List is [recipe[git::server]]
-[2013-12-01T23:59:22+00:00] INFO: Run List expands to [git::server]
-[2013-12-01T23:59:22+00:00] INFO: Starting Chef Run for server-ubuntu-1204
-[2013-12-01T23:59:22+00:00] INFO: Running start handlers
-[2013-12-01T23:59:22+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
-
-================================================================================
-Recipe Compile Error in /tmp/kitchen/cookbooks/git/recipes/server.rb
-================================================================================
+       Preparing solo.rb
+-----> Chef Omnibus installation detected (install only if missing)
+       Transferring files to <server-ubuntu-1404>
+       Starting Chef Client, version 12.17.44
+       resolving cookbooks for run list: ["git::server"]
+       Synchronizing Cookbooks:
+         - git (0.1.0)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       [2016-12-18T15:48:29+00:00] WARN: MissingCookbookDependency:
+       Recipe `runit` is not in the run_list, and cookbook 'runit'
+       is not a dependency of any cookbook in the run_list.  To load this recipe,
+       first add a dependency on cookbook 'runit' in the cookbook you're
+       including it from in that cookbook's metadata.
 
 
-Chef::Exceptions::CookbookNotFound
-----------------------------------
-Cookbook runit not found. If you're loading runit from another cookbook, make sure you configure the dependency in your metadata
+       ================================================================================
+       Recipe Compile Error in /tmp/kitchen/cache/cookbooks/git/recipes/server.rb
+       ================================================================================
 
+       Chef::Exceptions::CookbookNotFound
+       ----------------------------------
+       Cookbook runit not found. If you're loading runit from another cookbook, make sure you configure the dependency in your metadata
 
-Cookbook Trace:
----------------
-  /tmp/kitchen/cookbooks/git/recipes/server.rb:2:in `from_file'
+       Cookbook Trace:
+       ---------------
+         /tmp/kitchen/cache/cookbooks/git/recipes/server.rb:2:in `from_file'
 
+       Relevant File Content:
+       ----------------------
+       /tmp/kitchen/cache/cookbooks/git/recipes/server.rb:
 
-Relevant File Content:
-----------------------
-/tmp/kitchen/cookbooks/git/recipes/server.rb:
-
-  1:  include_recipe "git"
-  2>> include_recipe "runit"
-  3:
-  4:  package "git-daemon-run"
+         1:  include_recipe "git"
+         2>> include_recipe "runit"
+         3:
+         4:  package "git-daemon-run"
          5:
          6:  runit_service "git-daemon" do
-         7:      sv_templates false
+         7:    sv_templates false
          8:  end
          9:
 
+       Platform:
+       ---------
+       x86_64-linux
 
-[2013-12-01T23:59:22+00:00] ERROR: Running exception handlers
-[2013-12-01T23:59:22+00:00] ERROR: Exception handlers complete
-       [2013-12-01T23:59:22+00:00] FATAL: Stacktrace dumped to /tmp/kitchen/cache/chef-stacktrace.out
 
-Chef Client failed. 0 resources updated
-[2013-12-01T23:59:22+00:00] ERROR: Cookbook runit not found. If you're loading runit from another cookbook, make sure you configure the dependency in your metadata
-[2013-12-01T23:59:22+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)
->>>>>> Converge failed on instance <server-ubuntu-1204>.
->>>>>> Please see .kitchen/logs/server-ubuntu-1204.log for more details
+       Running handlers:
+       [2016-12-18T15:48:29+00:00] ERROR: Running exception handlers
+       Running handlers complete
+       [2016-12-18T15:48:29+00:00] ERROR: Exception handlers complete
+       Chef Client failed. 0 resources updated in 01 seconds
+       [2016-12-18T15:48:29+00:00] FATAL: Stacktrace dumped to /tmp/kitchen/cache/chef-stacktrace.out
+       [2016-12-18T15:48:29+00:00] FATAL: Please provide the contents of the stacktrace.out file if you file a bug report
+       [2016-12-18T15:48:29+00:00] ERROR: Cookbook runit not found. If you're loading runit from another cookbook, make sure you configure the dependency in your metadata
+       [2016-12-18T15:48:29+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)
 >>>>>> ------Exception-------
 >>>>>> Class: Kitchen::ActionFailed
->>>>>> Message: SSH exited (1) for command: [sudo -E chef-solo --config /tmp/kitchen/solo.rb --json-attributes /tmp/kitchen/dna.json  --log_level info]
+>>>>>> Message: 1 actions failed.
+>>>>>>     Converge failed on instance <server-ubuntu-1404>.  Please see .kitchen/logs/server-ubuntu-1404.log for more details
 >>>>>> ----------------------
+>>>>>> Please see .kitchen/logs/kitchen.log for more details
+>>>>>> Also try running `kitchen diagnose --all` for configuration
 ~~~
 
 See what the Chef run told you?
