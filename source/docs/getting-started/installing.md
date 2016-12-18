@@ -49,5 +49,5 @@ Now let's verify that Test Kitchen is installed. To save on typing, the tool's m
 
 ~~~
 $ kitchen version
-Test Kitchen version 1.0.0
+Test Kitchen version 1.14.2
 ~~~

@@ -11,51 +11,70 @@ next:
 Now that we have some code, let's let Test Kitchen run it for us on our Ubuntu 12.04 instance:
 
 ~~~
-$ kitchen converge default-ubuntu-1204
------> Starting Kitchen (v1.0.0)
------> Converging <default-ubuntu-1204>...
+$ kitchen converge default-ubuntu-1404
+-----> Starting Kitchen (v1.14.2)
+-----> Converging <default-ubuntu-1404>...
        Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
        Removing non-cookbook files before transfer
------> Installing Chef Omnibus (true)
-       downloading https://www.opscode.com/chef/install.sh
-         to file /tmp/install.sh
+       Preparing solo.rb
+-----> Installing Chef Omnibus (install only if missing)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying wget...
+       Download complete.
+       ubuntu 14.04 x86_64
+       Getting information for chef stable  for ubuntu...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=&p=ubuntu&pv=14.04&m=x86_64
+         to file /tmp/install.sh.1569/metadata.txt
        trying wget...
-Downloading Chef  for ubuntu...
-Installing Chef
-Selecting previously unselected package chef.
-(Reading database ... 53291 files and directories currently installed.)
-Unpacking chef (from .../tmp.GUasmrcD/chef__amd64.deb) ...
-Setting up chef (11.8.0-1.ubuntu.12.04) ...
-Thank you for installing Chef!
-       Transfering files to <default-ubuntu-1204>
-[2013-11-30T21:55:45+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-11-30T21:55:45+00:00] INFO: *** Chef 11.8.0 ***
-[2013-11-30T21:55:45+00:00] INFO: Chef-client pid: 1162
-[2013-11-30T21:55:46+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON
-[2013-11-30T21:55:46+00:00] INFO: Run List is [recipe[git::default]]
-[2013-11-30T21:55:46+00:00] INFO: Run List expands to [git::default]
-[2013-11-30T21:55:46+00:00] INFO: Starting Chef Run for default-ubuntu-1204
-[2013-11-30T21:55:46+00:00] INFO: Running start handlers
-[2013-11-30T21:55:46+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
-Converging 2 resources
-Recipe: git::default
-  * package[git] action install[2013-11-30T21:55:46+00:00] INFO: Processing package[git] action install (git::default line 1)
+       sha1	10b9026d57005aaf31289aec650931a02b5347d3
+       sha256	de5991b073fb22aa295fd0142f5e4ed3ca7da6ffe2c3fdcb01da29e4cdd0bd04
+       url	https://packages.chef.io/files/stable/chef/12.17.44/ubuntu/14.04/chef_12.17.44-1_amd64.deb
+       version	12.17.44
+       downloaded metadata file looks valid...
+       /tmp/omnibus/cache/chef_12.17.44-1_amd64.deb already exists, verifiying checksum...
+       Comparing checksum with sha256sum...
+       checksum compare succeeded, using existing file!
 
-    - install version 1:1.7.9.5-1 of package git
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 
-  * log[Well, that was too easy] action write[2013-11-30T21:56:14+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)
-[2013-11-30T21:56:14+00:00] INFO: Well, that was too easy
+       You are installing an omnibus package without a version pin.  If you are installing
+       on production servers via an automated process this is DANGEROUS and you will
+       be upgraded without warning on new releases, even to new major releases.
+       Letting the version float is only appropriate in desktop, test, development or
+       CI/CD environments.
+
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+       Installing chef
+       installing with dpkg...
+       Selecting previously unselected package chef.
+(Reading database ... 35284 files and directories currently installed.)
+       Preparing to unpack .../chef_12.17.44-1_amd64.deb ...
+       Unpacking chef (12.17.44-1) ...
+       Setting up chef (12.17.44-1) ...
+       Thank you for installing Chef!
+       Transferring files to <default-ubuntu-1404>
+       Starting Chef Client, version 12.17.44
+       Creating a new client identity for default-ubuntu-1404 using the validator key.
+       resolving cookbooks for run list: ["git::default"]
+       Synchronizing Cookbooks:
+         - git (0.1.0)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       Converging 2 resources
+       Recipe: git::default
+         * apt_package[git] action install
+           - install version 1:1.9.1-1ubuntu0.3 of package git
+         * log[Well, that was too easy] action write
 
 
-[2013-11-30T21:56:14+00:00] INFO: Chef Run complete in 28.139177847 seconds
-[2013-11-30T21:56:14+00:00] INFO: Running report handlers
-[2013-11-30T21:56:14+00:00] INFO: Report handlers complete
-Chef Client finished, 2 resources updated
-       Finished converging <default-ubuntu-1204> (1m3.91s).
------> Kitchen is finished. (1m4.22s)
+       Running handlers:
+       Running handlers complete
+       Chef Client finished, 2/2 resources updated in 21 seconds
+       Finished converging <default-ubuntu-1404> (0m28.08s).
+-----> Kitchen is finished. (0m28.22s)
 ~~~
 
 To quote our Chef run, that **was** too easy. If you are a Chef user then part of the output above should look familiar to you. Here's what happened at a high level:
@@ -67,38 +86,33 @@ To quote our Chef run, that **was** too easy. If you are a Chef user then part o
 There's nothing to stop you from running this command again (or over-and-over for that matter) so, let's see what happens:
 
 ~~~
-$ kitchen converge default-ubuntu-1204
------> Starting Kitchen (v1.0.0)
------> Converging <default-ubuntu-1204>...
+$ kitchen converge default-ubuntu-1404
+-----> Starting Kitchen (v1.14.2)
+-----> Converging <default-ubuntu-1404>...
        Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
        Removing non-cookbook files before transfer
-       Transfering files to <default-ubuntu-1204>
-[2013-11-30T21:57:00+00:00] INFO: Forking chef instance to converge...
-Starting Chef Client, version 11.8.0
-[2013-11-30T21:57:00+00:00] INFO: *** Chef 11.8.0 ***
-[2013-11-30T21:57:00+00:00] INFO: Chef-client pid: 4142
-[2013-11-30T21:57:01+00:00] INFO: Setting the run_list to ["recipe[git::default]"] from JSON
-[2013-11-30T21:57:01+00:00] INFO: Run List is [recipe[git::default]]
-[2013-11-30T21:57:01+00:00] INFO: Run List expands to [git::default]
-[2013-11-30T21:57:01+00:00] INFO: Starting Chef Run for default-ubuntu-1204
-[2013-11-30T21:57:01+00:00] INFO: Running start handlers
-[2013-11-30T21:57:01+00:00] INFO: Start handlers complete.
-Compiling Cookbooks...
-Converging 2 resources
-Recipe: git::default
-  * package[git] action install[2013-11-30T21:57:01+00:00] INFO: Processing package[git] action install (git::default line 1)
- (up to date)
-  * log[Well, that was too easy] action write[2013-11-30T21:57:01+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)
-[2013-11-30T21:57:01+00:00] INFO: Well, that was too easy
+       Preparing solo.rb
+-----> Chef Omnibus installation detected (install only if missing)
+       Transferring files to <default-ubuntu-1404>
+       Starting Chef Client, version 12.17.44
+       resolving cookbooks for run list: ["git::default"]
+       Synchronizing Cookbooks:
+         - git (0.1.0)
+       Installing Cookbook Gems:
+       Compiling Cookbooks...
+       Converging 2 resources
+       Recipe: git::default
+         * apt_package[git] action install (up to date)
+         * log[Well, that was too easy] action write
 
 
-[2013-11-30T21:57:01+00:00] INFO: Chef Run complete in 0.069998015 seconds
-[2013-11-30T21:57:01+00:00] INFO: Running report handlers
-[2013-11-30T21:57:01+00:00] INFO: Report handlers complete
-Chef Client finished, 1 resources updated
-       Finished converging <default-ubuntu-1204> (0m1.67s).
------> Kitchen is finished. (0m1.99s)
+       Running handlers:
+       Running handlers complete
+       Chef Client finished, 1/2 resources updated in 01 seconds
+       Finished converging <default-ubuntu-1404> (0m2.73s).
+-----> Kitchen is finished. (0m2.86s)
 ~~~
 
 That ran a **lot** faster didn't it? Here's what happened this time:
@@ -118,8 +132,8 @@ Let's check the status of our instance:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  ChefSolo     Converged
+Instance             Driver   Provisioner  Verifier  Transport  Last Action  Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        Converged    <None>
 ~~~
 
 A clean converge run, success! Let's commit our production code and move on:

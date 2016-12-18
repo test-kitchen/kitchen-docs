@@ -38,13 +38,13 @@ Now run `kitchen list` to see our new suite in action:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  ChefSolo     <Not Created>
-default-ubuntu-1004  Vagrant  ChefSolo     <Not Created>
-default-centos-64    Vagrant  ChefSolo     <Not Created>
-server-ubuntu-1204   Vagrant  ChefSolo     <Not Created>
-server-ubuntu-1004   Vagrant  ChefSolo     <Not Created>
-server-centos-64     Vagrant  ChefSolo     <Not Created>
+Instance             Driver   Provisioner  Verifier  Transport  Last Action    Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+default-ubuntu-1004  Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+default-centos-72    Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+server-ubuntu-1404   Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+server-ubuntu-1004   Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+server-centos-72     Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
 ~~~
 
 Woah, we've doubled our number of instances! Yes, that is going to happen. This explosion of test cases is just one reason why testing is hard.

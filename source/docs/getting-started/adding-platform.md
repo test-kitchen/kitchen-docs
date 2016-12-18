@@ -8,7 +8,7 @@ next:
   url: "dynamic-configuration"
 ---
 
-Now that we are masters of the Ubuntu platform, let's add support for CentOS to our cookbook. This shouldn't be too bad. Open `.kitchen.yml` in your editor and the `centos-6.4` line to your platforms list so that it resembles:
+Now that we are masters of the Ubuntu platform, let's add support for CentOS to our cookbook. This shouldn't be too bad. Open `.kitchen.yml` in your editor and the `centos-7.2` line to your platforms list so that it resembles:
 
 ~~~yaml
 ---
@@ -20,7 +20,7 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
-  - name: centos-6.4
+  - name: centos-7.2
 
 suites:
   - name: default
@@ -33,138 +33,169 @@ Now let's check the status of our instances:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  Chef Solo    <Not Created>
-default-centos-64    Vagrant  Chef Solo    <Not Created>
+Instance             Driver   Provisioner  Verifier  Transport  Last Action    Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+default-centos-72    Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
 ~~~
 
 We're going to use two shortcuts here in the next command:
 
 * Each Test Kitchen instance has a simple state machine that tracks where it is in its lifecyle. Given its current state and the desired state, the instance is smart enough to run all actions in between current and desired. In our next example we will take an instance from not created to verified in one command.
-* Any `kitchen` subcommand that takes an instance name as an argument can take a Ruby regular expression that will be used to glob a list of instances together. This means that `kitchen test ubuntu` would run the **test** action only the ubuntu instance. Note that the **list** subcommand also takes the regex-globbing argument so feel free to experiment there. In our next example we'll select the `default-centos-64` instance with simply `64`.
+* Any `kitchen` subcommand that takes an instance name as an argument can take a Ruby regular expression that will be used to glob a list of instances together. This means that `kitchen test ubuntu` would run the **test** action only the ubuntu instance. Note that the **list** subcommand also takes the regex-globbing argument so feel free to experiment there. In our next example we'll select the `default-centos-72` instance with simply `72`.
 
 Let's see how CentOS runs our cookbook:
 
 ~~~
-$ kitchen verify 64
------> Starting Kitchen (v1.0.0.beta.3)
------> Creating <default-centos-64>
-       [kitchen::driver::vagrant command] BEGIN (vagrant up --no-provision)
+$ kitchen destroy
+-----> Starting Kitchen (v1.14.2)
+-----> Destroying <default-ubuntu-1404>...
+       Finished destroying <default-ubuntu-1404> (0m0.00s).
+-----> Destroying <default-centos-72>...
+       ==> default: Forcing shutdown of VM...
+       ==> default: Destroying VM and associated drives...
+       Vagrant instance <default-centos-72> destroyed.
+       Finished destroying <default-centos-72> (0m6.46s).
+-----> Kitchen is finished. (0m6.74s)
+thoth:git-cookbook dom$ kitchen verify 72
+-----> Starting Kitchen (v1.14.2)
+-----> Creating <default-centos-72>...
        Bringing machine 'default' up with 'virtualbox' provider...
-       [default] Importing base box 'opscode-centos-6.4'...
-       [default] Matching MAC address for NAT networking...
-       [default] Setting the name of the VM...
-       [default] Clearing any previously set forwarded ports...
-       [default] Creating shared folders metadata...
-       [default] Clearing any previously set network interfaces...
-       [default] Preparing network interfaces based on configuration...
-       [default] Forwarding ports...
-       [default] -- 22 => 2222 (adapter 1)
-       [default] Running 'pre-boot' VM customizations...
-       [default] Booting VM...
-       [default] Waiting for machine to boot. This may take a few minutes...
-       [default] Machine booted and ready!
-       [default] Setting hostname...
-       [default] Mounting shared folders...
-       [kitchen::driver::vagrant command] END (0m51.59s)
-       [kitchen::driver::vagrant command] BEGIN (vagrant ssh-config)
-       [kitchen::driver::vagrant command] END (0m0.87s)
-       Vagrant instance <default-centos-64> created.
-       Finished creating <default-centos-64> (0m57.25s).
------> Converging <default-centos-64>
------> Installing Chef Omnibus (true)
-       --2013-10-17 06:52:15--  https://www.opscode.com/chef/install.sh
-Resolving www.opscode.com...        184.106.28.82
-       Connecting to www.opscode.com|184.106.28.82|:443...
-       connected.
-HTTP request sent, awaiting response...        200 OK
-       Length: 6790 (6.6K) [application/x-sh]
-       Saving to: `STDOUT'
-
- 0% [                                       ] 0           --.-K/s
-100%[======================================>] 6,790       --.-K/s   in 0s
-
-       2013-10-17 06:52:20 (336 MB/s) - written to stdout [6790/6790]
-
-       Downloading Chef  for el...
-       Installing Chef
-       warning: /tmp/tmp.VHOrEPIv/chef-.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
-Preparing...                #####  ########################################### [100%]
-   1:chef                          ########################################### [100%]
-       Thank you for installing Chef!
+       ==> default: Importing base box 'bento/centos-7.2'...
+==> default: Matching MAC address for NAT networking...
+       ==> default: Checking if box 'bento/centos-7.2' is up to date...
+       ==> default: Setting the name of the VM: kitchen-git-cookbook-default-centos-72_default_1482061251204_56474
+       ==> default: Clearing any previously set network interfaces...
+       ==> default: Preparing network interfaces based on configuration...
+           default: Adapter 1: nat
+       ==> default: Forwarding ports...
+           default: 22 (guest) => 2222 (host) (adapter 1)
+       ==> default: Running 'pre-boot' VM customizations...
+       ==> default: Booting VM...
+       ==> default: Waiting for machine to boot. This may take a few minutes...
+           default: SSH address: 127.0.0.1:2222
+           default: SSH username: vagrant
+           default: SSH auth method: private key
+           default: Warning: Remote connection disconnect. Retrying...
+           default:
+           default: Vagrant insecure key detected. Vagrant will automatically replace
+           default: this with a newly generated keypair for better security.
+           default:
+           default: Inserting generated public key within guest...
+           default: Removing insecure key from the guest if it's present...
+           default: Key inserted! Disconnecting and reconnecting using new SSH key...
+       ==> default: Machine booted and ready!
+       ==> default: Checking for guest additions in VM...
+       ==> default: Setting hostname...
+       ==> default: Mounting shared folders...
+           default: /tmp/omnibus/cache => /Users/dom/.kitchen/cache
+       ==> default: Machine not provisioned because `--no-provision` is specified.
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+       [SSH] Established
+       Vagrant instance <default-centos-72> created.
+       Finished creating <default-centos-72> (0m52.92s).
+-----> Converging <default-centos-72>...
+       Preparing files for transfer
+       Preparing dna.json
        Preparing current project directory as a cookbook
-       Removing non-cookbook files in sandbox
-       Uploaded /var/folders/ld/ykg04kvx5y53v7qkhpp254y40000gn/T/default-centos-64-sandbox-20131017-65316-1copg0l/cookbooks/git/metadata.rb (27 bytes)
-       Uploaded /var/folders/ld/ykg04kvx5y53v7qkhpp254y40000gn/T/default-centos-64-sandbox-20131017-65316-1copg0l/cookbooks/git/recipes/default.rb (45 bytes)
-       Uploaded /var/folders/ld/ykg04kvx5y53v7qkhpp254y40000gn/T/default-centos-64-sandbox-20131017-65316-1copg0l/dna.json (28 bytes)
-       Uploaded /var/folders/ld/ykg04kvx5y53v7qkhpp254y40000gn/T/default-centos-64-sandbox-20131017-65316-1copg0l/solo.rb (166 bytes)
-       [2013-10-17T06:53:02+00:00] INFO: Forking chef instance to converge...
-       Starting Chef Client, version 11.6.2
-       [2013-10-17T06:53:02+00:00] INFO: *** Chef 11.6.2 ***
-       [2013-10-17T06:53:02+00:00] INFO: Setting the run_list to ["recipe[git]"] from JSON
-       [2013-10-17T06:53:02+00:00] INFO: Run List is [recipe[git]]
-       [2013-10-17T06:53:02+00:00] INFO: Run List expands to [git]
-       [2013-10-17T06:53:02+00:00] INFO: Starting Chef Run for default-centos-64
-       [2013-10-17T06:53:02+00:00] INFO: Running start handlers
-       [2013-10-17T06:53:02+00:00] INFO: Start handlers complete.
+       Removing non-cookbook files before transfer
+       Preparing solo.rb
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-----> Installing Chef Omnibus (install only if missing)
+       Downloading https://omnitruck.chef.io/install.sh to file /tmp/install.sh
+       Trying wget...
+       Download complete.
+       el 7 x86_64
+       Getting information for chef stable  for el...
+       downloading https://omnitruck.chef.io/stable/chef/metadata?v=&p=el&pv=7&m=x86_64
+         to file /tmp/install.sh.9748/metadata.txt
+       trying wget...
+       sha1	ffa2c60116d57c8b987ee2e906bff9106c98daf5
+       sha256	beccc11f5861bde369f62ca3fd7361b536786e91d73f538857e625a622f8caef
+       url	https://packages.chef.io/files/stable/chef/12.17.44/el/7/chef-12.17.44-1.el7.x86_64.rpm
+       version	12.17.44
+       downloaded metadata file looks valid...
+       /tmp/omnibus/cache/chef-12.17.44-1.el7.x86_64.rpm already exists, verifiying checksum...
+       Comparing checksum with sha256sum...
+       checksum compare succeeded, using existing file!
+
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+       You are installing an omnibus package without a version pin.  If you are installing
+       on production servers via an automated process this is DANGEROUS and you will
+       be upgraded without warning on new releases, even to new major releases.
+       Letting the version float is only appropriate in desktop, test, development or
+       CI/CD environments.
+
+       WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+       Installing chef
+       installing with rpm...
+       warning: /tmp/omnibus/cache/chef-12.17.44-1.el7.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
+       Preparing...                          ################################# [100%]
+       Updating / installing...
+          1:chef-12.17.44-1.el7              ################################# [100%]
+       Thank you for installing Chef!
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+       Transferring files to <default-centos-72>
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+       Starting Chef Client, version 12.17.44
+       Creating a new client identity for default-centos-72 using the validator key.
+       resolving cookbooks for run list: ["git::default"]
+       Synchronizing Cookbooks:
+         - git (0.1.0)
+       Installing Cookbook Gems:
        Compiling Cookbooks...
        Converging 2 resources
        Recipe: git::default
-         * package[git] action install
-
-       [2013-10-17T06:53:02+00:00] INFO: Processing package[git] action install (git::default line 1)
-        (up to date)
+         * yum_package[git] action install
+           - install version 1.8.3.1-6.el7_2.1 of package git
          * log[Well, that was too easy] action write
-       [2013-10-17T06:54:05+00:00] INFO: Processing log[Well, that was too easy] action write (git::default line 3)
-       [2013-10-17T06:54:05+00:00] INFO: Well, that was too easy
 
 
-       [2013-10-17T06:54:05+00:00] INFO: Chef Run complete in 62.525344754 seconds
-       [2013-10-17T06:54:05+00:00] INFO: Running report handlers
-       [2013-10-17T06:54:05+00:00] INFO: Report handlers complete
-       Chef Client finished, 1 resources updated
-       Finished converging <default-centos-64> (1m50.16s).
------> Setting up <default-centos-64>
-Fetching: thor-0.18.1.gem (100%)
-Fetching: busser-0.4.1.gem (100%)
-       Successfully installed thor-0.18.1
-       Successfully installed busser-0.4.1
+       Running handlers:
+       Running handlers complete
+       Chef Client finished, 2/2 resources updated in 32 seconds
+       Finished converging <default-centos-72> (0m44.40s).
+-----> Setting up <default-centos-72>...
+       Finished setting up <default-centos-72> (0m0.00s).
+-----> Verifying <default-centos-72>...
+       Preparing files for transfer
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-----> Installing Busser (busser)
+Fetching: thor-0.19.0.gem (100%)
+       Successfully installed thor-0.19.0
+Fetching: busser-0.7.1.gem (100%)
+       Successfully installed busser-0.7.1
        2 gems installed
------> Setting up Busser
-       Creating BUSSER_ROOT in /opt/busser
-       Creating busser binstub
-       Plugin bats installed (version 0.1.0)
+       Installing Busser plugins: busser-bats
+       Plugin bats installed (version 0.3.0)
 -----> Running postinstall for bats plugin
-             create  /tmp/bats20131017-2604-10io6m5/bats
-             create  /tmp/bats20131017-2604-10io6m5/bats.tar.gz
-       Installed Bats to /opt/busser/vendor/bats/bin/bats
-             remove  /tmp/bats20131017-2604-10io6m5
-       Finished setting up <default-centos-64> (0m54.66s).
------> Verifying <default-centos-64>
-       Suite path directory /opt/busser/suites does not exist, skipping.
-       Uploading /opt/busser/suites/bats/git_installed.bats (mode=0644)
+       Installed Bats to /tmp/verifier/vendor/bats/bin/bats
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+       Suite path directory /tmp/verifier/suites does not exist, skipping.
+       Transferring files to <default-centos-72>
+       /etc/profile.d/lang.sh: line 19: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
 -----> Running bats test suite
-       1..1
-       ok 1 git binary is found in PATH
-       Finished verifying <default-centos-64> (0m1.11s).
------> Kitchen is finished. (3m43.47s)
+ ✓ git binary is found in PATH
+
+       1 test, 0 failures
+       Finished verifying <default-centos-72> (0m5.49s).
+-----> Kitchen is finished. (1m42.99s)
 ~~~
 
-Nice! We've verified that our cookbook works on Ubuntu 12.04 and CentOS 6.4. Since the CentOS instance will hang out for no good reason, let's kill it for now:
+Nice! We've verified that our cookbook works on Ubuntu 14.04 and CentOS 7.2. Since the CentOS instance will hang out for no good reason, let's kill it for now:
 
 ~~~
 $ kitchen destroy
------> Starting Kitchen (v1.0.0.beta.3)
------> Destroying <default-ubuntu-1204>
-       Finished destroying <default-ubuntu-1204> (0m0.00s).
------> Destroying <default-centos-64>
-       [kitchen::driver::vagrant command] BEGIN (vagrant destroy -f)
-       [default] Forcing shutdown of VM...
-       [default] Destroying VM and associated drives...
-       [kitchen::driver::vagrant command] END (0m2.79s)
-       Vagrant instance <default-centos-64> destroyed.
-       Finished destroying <default-centos-64> (0m3.09s).
------> Kitchen is finished. (0m3.39s)
+-----> Starting Kitchen (v1.14.2)
+-----> Destroying <default-ubuntu-1404>...
+       Finished destroying <default-ubuntu-1404> (0m0.00s).
+-----> Destroying <default-centos-72>...
+       ==> default: Forcing shutdown of VM...
+       ==> default: Destroying VM and associated drives...
+       Vagrant instance <default-centos-72> destroyed.
+       Finished destroying <default-centos-72> (0m7.19s).
+-----> Kitchen is finished. (0m7.52s)
 ~~~
 
 Interesting. Test Kitchen tried to destroy both instances, one that was created and the other that was not. Which brings us to another tip with the `kitchen` command:
@@ -175,16 +206,16 @@ Let's make sure everything has been destroyed:
 
 ~~~
 $ kitchen list
-Instance             Driver   Provisioner  Last Action
-default-ubuntu-1204  Vagrant  Chef Solo    <Not Created>
-default-centos-64    Vagrant  Chef Solo    <Not Created>
+Instance             Driver   Provisioner  Verifier  Transport  Last Action    Last Error
+default-ubuntu-1404  Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
+default-centos-72    Vagrant  ChefSolo     Busser    Ssh        <Not Created>  <None>
 ~~~
 
 There's no production code change so far but we did modify the `.kitchen.yml` file, so let's commit that:
 
 ~~~
 $ git add .kitchen.yml
-> git commit -m "Add support for CentOS 6.4."
-[master 528ac72] Add support for CentOS 6.4.
+$ git commit -m "Add support for CentOS 7.2."
+[master f03cff6] Add support for CentOS 7.2.
  1 file changed, 1 insertion(+)
 ~~~
